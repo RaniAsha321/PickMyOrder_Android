@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/_15sdp"
+    android:paddingRight="@dimen/_15sdp"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_130sdp">
+
+
+            <LinearLayout
+
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/newlogo"
+                    android:layout_gravity="center"
+                    android:layout_width="@dimen/_200sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    <LinearLayout
+
+        android:paddingTop="@dimen/_12sdp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center"
+            android:text="View Project"
+            android:textColor="@color/bluetheme"
+            android:textSize="@dimen/_17sdp" />
+
+        <ImageView
+
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/ic_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+
+        android:layout_marginTop="@dimen/_8sdp"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp">
+
+        <TextView
+
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="#333e48"
+            android:fontFamily="@font/raleway"
+            android:text="Project Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_25sdp"
+            android:weightSum="4">
+
+            <TextView
+
+
+                android:id="@+id/project_names"
+                android:focusableInTouchMode="true"
+                android:layout_width="@dimen/_215sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:layout_weight="3.8"
+                android:background="@null"
+                android:filterTouchesWhenObscured="false"
+                android:fontFamily="@font/raleway"
+                android:includeFontPadding="false"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingTop="@dimen/_10sdp"
+                android:textColorHint="#333e48"
+                android:textSize="@dimen/_12sdp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="1dp">
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#DCDCDC" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+
+        android:layout_marginTop="@dimen/_8sdp"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp">
+
+        <TextView
+
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="#333e48"
+            android:fontFamily="@font/raleway"
+            android:text="Customer Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_25sdp"
+            android:weightSum="4">
+
+            <TextView
+
+                android:id="@+id/customer_name"
+                android:focusableInTouchMode="true"
+                android:layout_width="@dimen/_215sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:layout_weight="3.8"
+                android:filterTouchesWhenObscured="false"
+                android:fontFamily="@font/raleway"
+                android:includeFontPadding="false"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingTop="@dimen/_10sdp"
+                android:textColorHint="#333e48"
+                android:textSize="@dimen/_12sdp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="1dp">
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#DCDCDC" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+
+        android:layout_marginTop="@dimen/_8sdp"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp">
+
+        <TextView
+
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="#333e48"
+            android:fontFamily="@font/raleway"
+            android:text="Full Address *"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_25sdp"
+            android:weightSum="4">
+
+            <TextView
+
+
+                android:id="@+id/full_address"
+                android:clickable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="@dimen/_215sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:layout_weight="3.8"
+                android:background="@null"
+                android:filterTouchesWhenObscured="false"
+                android:fontFamily="@font/raleway"
+                android:includeFontPadding="false"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingTop="@dimen/_10sdp"
+                android:textColorHint="#333e48"
+                android:textSize="@dimen/_12sdp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="1dp">
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#DCDCDC" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+
+        android:layout_marginTop="@dimen/_8sdp"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp">
+
+        <TextView
+
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="#333e48"
+            android:fontFamily="@font/raleway"
+            android:text="Delivery Address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_25sdp"
+            android:weightSum="4">
+
+            <TextView
+
+
+                android:id="@+id/delivery_address"
+                android:focusableInTouchMode="true"
+                android:layout_width="@dimen/_215sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:layout_weight="3.8"
+                android:background="@null"
+                android:filterTouchesWhenObscured="false"
+                android:fontFamily="@font/raleway"
+                android:includeFontPadding="false"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingTop="@dimen/_10sdp"
+                android:textColorHint="#333e48"
+                android:textSize="@dimen/_12sdp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="1dp">
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#DCDCDC" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_marginTop="@dimen/_8sdp"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp">
+
+        <TextView
+
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="#333e48"
+            android:fontFamily="@font/raleway"
+            android:text="Contatct No."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_25sdp"
+            android:weightSum="4">
+
+            <TextView
+
+                android:id="@+id/contact"
+                android:focusableInTouchMode="true"
+                android:layout_width="@dimen/_215sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:layout_weight="3.8"
+                android:filterTouchesWhenObscured="false"
+                android:fontFamily="@font/raleway"
+                android:includeFontPadding="false"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingTop="@dimen/_10sdp"
+                android:textColorHint="#333e48"
+                android:textSize="@dimen/_12sdp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="1dp">
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#DCDCDC" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_marginTop="@dimen/_8sdp"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp">
+
+        <TextView
+
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="#333e48"
+            android:fontFamily="@font/raleway"
+            android:text="Email Address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_25sdp"
+            android:weightSum="4">
+
+            <TextView
+
+                android:id="@+id/project_email"
+                android:clickable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="@dimen/_215sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:layout_weight="3.8"
+                android:filterTouchesWhenObscured="false"
+                android:fontFamily="@font/raleway"
+                android:includeFontPadding="false"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingTop="@dimen/_10sdp"
+                android:textColorHint="#333e48"
+                android:textSize="@dimen/_12sdp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="1dp">
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#DCDCDC" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+<!--    <LinearLayout
+
+        android:layout_marginTop="@dimen/_8sdp"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp">
+
+        <TextView
+
+            android:gravity="center"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="#333e48"
+            android:fontFamily="@font/raleway"
+            android:text="Postcode *"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_25sdp"
+            android:weightSum="4">
+
+            <TextView
+
+                android:id="@+id/txtvw_address_postcode"
+                android:clickable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="@dimen/_215sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:layout_weight="3.8"
+                android:filterTouchesWhenObscured="false"
+                android:fontFamily="@font/raleway"
+                android:includeFontPadding="false"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingTop="@dimen/_10sdp"
+                android:textColorHint="#333e48"
+                android:textSize="@dimen/_12sdp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="1dp">
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#DCDCDC" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>-->
+
+
+    <LinearLayout
+
+        android:visibility="gone"
+        android:id="@+id/project_edit"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_30sdp">
+
+
+            <Button
+
+                android:id="@+id/btn_edit_view_address"
+                android:fontFamily="@font/raleway"
+                android:textSize="@dimen/_13sdp"
+                android:textColor="@color/white"
+                android:text="Edit"
+                android:background="@drawable/shape_rounded_green"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+
+        android:visibility="gone"
+        android:id="@+id/project_remove"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_30sdp">
+
+             <Button
+
+                 android:id="@+id/btn_delete_view_address"
+                 android:text="Delete"
+                 android:fontFamily="@font/raleway"
+                 android:textSize="@dimen/_13sdp"
+                 android:textColor="@color/bluetheme"
+                 android:background="@drawable/shape_corner_rounded"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

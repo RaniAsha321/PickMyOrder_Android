@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:weightSum="9"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<!--
+    <LinearLayout
+
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:layout_weight="8.4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+                <TextView
+
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@color/bluetheme"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/raleway_medium"
+                    android:textSize="@dimen/_13sdp"
+                    android:text="All Quotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+    </LinearLayout>-->
+
+    <LinearLayout
+
+        android:layout_weight="0.6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+
+            android:background="#f7f7f7"
+            android:id="@+id/recyclerview_quotes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</LinearLayout>

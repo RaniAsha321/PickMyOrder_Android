@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:layout_margin="@dimen/_10sdp"
+    android:orientation="vertical"
+    android:layout_width="@dimen/_250sdp"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+
+
+        android:weightSum="5"
+        android:id="@+id/drop_supplier"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:background="@drawable/shape_corner_rounded"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp" >
+
+        <LinearLayout
+
+            android:gravity="center"
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+
+
+                android:textColor="@color/themeblack"
+                android:textStyle="bold"
+                android:id="@+id/tv_quote_supplier"
+                android:gravity="center"
+                android:text="Select Supplier"
+                android:textSize="@dimen/_12sdp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:gravity="center"
+            android:layout_weight="4.5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+
+
+                android:background="@drawable/dropmenu"
+                android:layout_gravity="center"
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_10sdp" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+
+        android:id="@+id/layout_delivery"
+        android:weightSum="2"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:background="@drawable/shape_corner_rounded"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp" >
+
+
+        <TextView
+
+            android:gravity="center"
+            android:paddingRight="@dimen/_5sdp"
+            android:layout_gravity="center"
+            android:layout_weight="0.8"
+            android:id="@+id/delivery_date"
+            android:textColor="#333e48"
+            android:fontFamily="@font/raleway_medium"
+            android:textStyle="bold"
+            android:textSize="@dimen/_11sdp"
+            android:text="Delivery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:id="@+id/layout_collection"
+        android:weightSum="2"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="@drawable/shape_corner_rounded"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp" >
+
+        <TextView
+
+
+            android:paddingRight="@dimen/_5sdp"
+            android:layout_gravity="center"
+            android:layout_weight="0.8"
+            android:id="@+id/collection_date"
+            android:textColor="#333e48"
+            android:fontFamily="@font/raleway_medium"
+            android:textStyle="bold"
+            android:textSize="@dimen/_11sdp"
+            android:gravity="center"
+            android:text="Collection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+
+
+    <Button
+
+        android:id="@+id/purchase_order"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/raleway_medium"
+        android:textAllCaps="false"
+        android:textSize="@dimen/_14sdp"
+        android:textColor="#ffffff"
+        android:text="Purchase Order"
+        android:background="@drawable/shape_rounded_green"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp" />
+
+    <Button
+
+        android:visibility="gone"
+        android:id="@+id/btn_payment"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/raleway_medium"
+        android:textAllCaps="false"
+        android:textSize="@dimen/_14sdp"
+        android:textColor="#ffffff"
+        android:text="Pay By Card"
+        android:background="@drawable/shape_rounded_green"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp" />
+
+</LinearLayout>

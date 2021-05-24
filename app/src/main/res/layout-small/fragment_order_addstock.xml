@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:weightSum="9"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+
+        android:weightSum="2"
+        android:orientation="horizontal"
+        android:layout_weight="8.5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+
+            android:layout_weight="1.1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+
+                android:textColor="#333e48"
+                android:fontFamily="@font/raleway_medium"
+                android:paddingLeft="@dimen/_5sdp"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/_14sdp"
+                android:text="Po/No. : "
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+            <TextView
+
+                android:textColor="#333e48"
+                android:fontFamily="@font/roboto_medium"
+                android:id="@+id/reference_add_stock"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/_14sdp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:gravity="left"
+            android:layout_weight="0.9"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+
+                android:textColor="#333e48"
+                android:fontFamily="@font/raleway_medium"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/_14sdp"
+                android:text="Date : "
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+            <TextView
+
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="#333e48"
+                android:id="@+id/date_add_stock"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/_13sdp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:orientation="vertical"
+        android:weightSum="9"
+        android:layout_weight="0.5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+
+                android:id="@+id/recyclerview_order_addstock"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:gravity="center"
+            android:layout_weight="8"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+
+                android:layout_marginRight="@dimen/_10sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:id="@+id/btn_add_stock"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:textSize="@dimen/_15sdp"
+                android:text="Add To Stock"
+                android:background="@color/bluetheme"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_35sdp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
