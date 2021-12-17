@@ -2,13 +2,13 @@ package com.pickmyorder.asharani;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -20,11 +20,22 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.paperdb.Paper;
@@ -33,6 +44,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.pickmyorder.asharani.Next_Login_Page.MY_PREFS_NAME;
 
 public class Project_details_add_project extends AppCompatActivity implements MultiSelectionSpinner.OnMultipleItemsSelectedListener{
 
@@ -62,7 +75,11 @@ public class Project_details_add_project extends AppCompatActivity implements Mu
     TextView txt_update_cancel;
     TextView txt_update_submit;
     static String normorTrx;
-
+    final Handler handler = new Handler();
+    final int delay = 1000; // 1000 milliseconds == 1 second
+    long Todaymsecond;
+    String business_validity;
+    com.pickmyorder.asharani.databaseSqlite databaseSqlite;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,6 +102,10 @@ public class Project_details_add_project extends AppCompatActivity implements Mu
         layout_assign_engineer=findViewById(R.id.layout_assign_engineer);
         drop_update=findViewById(R.id.drop_update);
         tv_drop_assign_eng=findViewById(R.id.tv_drop_assign_eng);
+        databaseSqlite = new databaseSqlite(getApplicationContext());
+        SharedPreferences sharedPreferences =getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        business_validity =  sharedPreferences.getString("business_validity",null);
+        sharedPreferences.getAll();
 
         mylist=new ArrayList<String[]>();
         updatelist=new ArrayList<CheckBox>();
@@ -113,6 +134,9 @@ public class Project_details_add_project extends AppCompatActivity implements Mu
             full_addres =Paper.book().read("full_addres");
             delivery_addres=Paper.book().read("delivery_addres");
 
+            Log.e("Address_Full",full_addres+"");
+            Log.e("Address_Dele",delivery_addres+"");
+
             addressList = full_addres.split(",");
             DeliveryList = delivery_addres.split(",");
             Paper.book().read("alloted_engineers");
@@ -121,12 +145,45 @@ public class Project_details_add_project extends AppCompatActivity implements Mu
             email_address.setText(Paper.book().read("email_addres"));
             contact_no.setText(Paper.book().read("contact"));
             full_address.setText(addressList [0]);
-            city.setText(addressList [1]);
-            post_code.setText(addressList [2]);
             delivery_address.setText(DeliveryList [0]);
-            delivery_city.setText(DeliveryList [1]);
-            delivery_post_code.setText(DeliveryList [2]);
 
+
+            if (!addressList [1].equals("NA")){
+
+                city.setText(addressList [1]);
+            }
+            else {
+                city.setText("");
+            }
+
+            if (!addressList [2].equals("NA")){
+
+                post_code.setText(addressList [2]);
+            }
+            else {
+                post_code.setText("");
+            }
+
+
+            if (!DeliveryList [1].equals("NA")){
+
+                delivery_city.setText(DeliveryList [1]);
+            }
+            else {
+                delivery_city.setText("");
+            }
+
+
+            if (!addressList [2].equals("NA")){
+
+                delivery_post_code.setText(DeliveryList [2]);
+
+            }
+
+            else {
+
+                delivery_post_code.setText("");
+            }
 
             String userid= Paper.book().read("userid");
 
@@ -152,16 +209,16 @@ public class Project_details_add_project extends AppCompatActivity implements Mu
 
                                 if (!TextUtils.isEmpty(full_address.getText().toString())) {
 
-                                    if (!TextUtils.isEmpty(city.getText().toString())) {
+                                    /*if (!TextUtils.isEmpty(city.getText().toString())) {
 
                                         if (!TextUtils.isEmpty(post_code.getText().toString())) {
-
+*/
                                             if (!TextUtils.isEmpty(delivery_address.getText().toString())) {
 
-                                                if (!TextUtils.isEmpty(delivery_city.getText().toString())) {
+                                               /* if (!TextUtils.isEmpty(delivery_city.getText().toString())) {
 
                                                     if (!TextUtils.isEmpty(delivery_post_code.getText().toString())) {
-
+*/
                                                         if (!TextUtils.isEmpty(contact_no.getText().toString())) {
 
                                                             if (!TextUtils.isEmpty(email_address.getText().toString())) {
@@ -190,7 +247,7 @@ public class Project_details_add_project extends AppCompatActivity implements Mu
 
                                                         }
 
-                                                    } else {
+                                                    /*} else {
 
                                                         Toast.makeText(getApplicationContext(), " Enter Delivery Post Code", Toast.LENGTH_SHORT).show();
 
@@ -200,7 +257,7 @@ public class Project_details_add_project extends AppCompatActivity implements Mu
 
                                                     Toast.makeText(getApplicationContext(), " Enter Delivery City", Toast.LENGTH_SHORT).show();
 
-                                                }
+                                                }*/
 
                                             } else {
 
@@ -208,7 +265,7 @@ public class Project_details_add_project extends AppCompatActivity implements Mu
 
                                             }
 
-                                        } else {
+                                        /*} else {
 
                                             Toast.makeText(getApplicationContext(), " Enter Post code", Toast.LENGTH_SHORT).show();
 
@@ -218,7 +275,7 @@ public class Project_details_add_project extends AppCompatActivity implements Mu
 
                                         Toast.makeText(getApplicationContext(), " Enter City", Toast.LENGTH_SHORT).show();
 
-                                    }
+                                    }*/
 
                                 } else {
 
@@ -639,6 +696,8 @@ private boolean validateSpinner(MultiSelectionSpinner spinner_assign) {
             //Defining retrofit api service
             ApiLogin_Interface service = retrofit.create(ApiLogin_Interface.class);
 
+            Log.e("toString",toString+"");
+
             service.UPDATE_PROJECT_CALL(toString).enqueue(new Callback<ModelAddProject>() {
                 @Override
                 public void onResponse(Call<ModelAddProject> call, Response<ModelAddProject> response) {
@@ -648,13 +707,14 @@ private boolean validateSpinner(MultiSelectionSpinner spinner_assign) {
                     if(response.body().getStatusCode().equals(200)){
 
                         Toast.makeText(getApplicationContext(),"Project Updated Successfully",Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(Project_details_add_project.this,Home.class);
+                        Intent intent=new Intent(Project_details_add_project.this, Home.class);
                         startActivity(intent);
                     }
                     else
                     {
                         Toast.makeText(getApplicationContext(),"Change something",Toast.LENGTH_LONG).show();
                     }
+
 
                 }
 
@@ -759,6 +819,7 @@ private boolean validateSpinner(MultiSelectionSpinner spinner_assign) {
 
         try {
 
+            Log.e("finalStringid",Paper.book().read("finalUpdateProId")+"");
             Log.e("finalString",Paper.book().read("finalString")+"");
 
             order1.put("id",Paper.book().read("pro_id_update"));
@@ -872,6 +933,118 @@ private boolean validateSpinner(MultiSelectionSpinner spinner_assign) {
 
        super.onBackPressed();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Business_Validity_Check(business_validity);
+
+    }
+
+
+    private void Business_Validity_Check(String business_validity) {
+
+        if(business_validity != null && !business_validity.equals("")){
+
+            processCurrentTime(business_validity);
+
+        }
+    }
+
+    private void processCurrentTime(String business_validity) {
+
+        if (!isDataConnectionAvailable(Project_details_add_project.this)) {
+            showerrorDialog("No Network coverage!");
+        } else {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            try {
+                Date mDate = sdf.parse(business_validity);
+                long timeInMilliseconds = mDate.getTime();
+
+                Log.e("timeInMilliseconds",timeInMilliseconds+"");
+                checkExpiry(timeInMilliseconds);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public static boolean isDataConnectionAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+        if (info == null)
+            return false;
+
+        return connectivityManager.getActiveNetworkInfo().isConnected();
+    }
+
+    private void checkExpiry(long timestampinMillies) {
+
+        Date What_Is_Today= Calendar.getInstance().getTime();
+        SimpleDateFormat Dateformat = new SimpleDateFormat("yyyy/MM/dd");
+        String Today=Dateformat.format(What_Is_Today);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            Date mDate = sdf.parse(Today);
+            Todaymsecond = mDate.getTime();
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (timestampinMillies <= Todaymsecond) {
+            showerrorDialog("Validity of Trial Version has been Expired");
+        }
+
+    }
+
+    private void showerrorDialog(String data) {
+
+        final Dialog dialog= new Dialog(Project_details_add_project.this);
+        dialog.setContentView(R.layout.custom_dialog_trial);
+        dialog.show();
+        Button btn_continue = dialog.findViewById(R.id.btn_continue_trial);
+
+        btn_continue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(),Login.class);
+                startActivity(intent);
+                SharedPreferences pref = getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+
+                editor.clear();
+
+                editor.commit();
+
+                startActivity(intent);
+
+                databaseSqlite.deleteAll();
+
+                Paper.book().write("datarole","");
+                Paper.book().write("permission_see_cost","");
+                Paper.book().write("permission_cat","");
+                Paper.book().write("permission_orders","");
+                Paper.book().write("permission_pro_detailsss","");
+                Paper.book().write("permission_catelogues","");
+                Paper.book().write("permission_all_orders","");
+                Paper.book().write("permission_awaiting","");
+                Paper.book().write("deviceid","");
+                Paper.book().write("permission_wholeseller", "");
+                Paper.book().write("ViewWholesellerPage", "100");
+            }
+        });
+
+        dialog.setCancelable(false);
+    }
+
 
 }
 

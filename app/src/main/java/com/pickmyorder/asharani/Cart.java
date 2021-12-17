@@ -6,11 +6,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,7 +27,18 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,7 +87,7 @@ public class Cart extends Fragment {
     Adapter_Quote_Supplier adapter_update_project;
     private int mYear, mMonth, mDay, mHour, mMinute;
     ImageView imgvw_arrow_quote;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     private int minHour = 7;
     private int minMinute = 0;
@@ -112,7 +118,6 @@ public class Cart extends Fragment {
         view.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-
                 if( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
 
                     getFragmentManager().popBackStack("cart", FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -160,6 +165,14 @@ public class Cart extends Fragment {
         my_quote = new ArrayList<>();
         list_del_col = new ArrayList<>();
        // my_quote.add("Van Stock");
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Cart");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
         if (vanstock != null && vanstock.equals("1")){
 
@@ -228,8 +241,6 @@ public class Cart extends Fragment {
 
                     Quotes_invoice();
                 }
-
-
 
             }
         });
@@ -318,8 +329,6 @@ public class Cart extends Fragment {
                         Log.e("tigerqueen", business_id+"");
 
                         Log.e("tigerqueen", whichbusiness+"");
-
-
 
                         drop_supplier.setVisibility(View.GONE);
 
@@ -576,7 +585,7 @@ public class Cart extends Fragment {
 
             Proceed.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                   public void onClick(View v) {
 
                     Paper.book().write("order_desc",order_desc.getText().toString().trim());
 
@@ -640,9 +649,6 @@ public class Cart extends Fragment {
                     if(!tv_drop_project.getText().equals("Select Project")){
 
                         if (!TextUtils.isEmpty(order_desc.getText().toString().trim())) {
-
-
-
 
                                 if (Proceed.getText().toString().equals("Proceed to Summary")) {
 
@@ -813,10 +819,14 @@ public class Cart extends Fragment {
                     dropdownmenu_supplier();
 
                 }
+                else if (Proceed.getText().toString().equals("Send Quotation")) {
+
+                    dropdownmenu_supplier_Quotes();
+                }
 
                 else {
 
-                    dropdownmenu_supplier_Quotes();
+                    dropdownmenu_supplier();
                 }
             }
         });
@@ -1050,7 +1060,7 @@ public class Cart extends Fragment {
 
         final ProgressDialog progressDialog=new ProgressDialog(getActivity(),R.style.AlertDialogCustom);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage("Please Wait.......");
+        progressDialog.setMessage("Ordering.......");
         progressDialog.show();
 
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -1068,12 +1078,35 @@ public class Cart extends Fragment {
         //Defining retrofit api service
         ApiLogin_Interface service = retrofit.create(ApiLogin_Interface.class);
 
-        devicetoken= FirebaseInstanceId.getInstance().getToken();
+   //     devicetoken= FirebaseInstanceId.getInstance().getToken();
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("Token", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        // Get new Instance ID token
+                        devicetoken = task.getResult();
+                    }
+                });
         service.CART_VAN_CALL(cart_string).enqueue(new Callback<ModelBuyNow>() {
             @Override
             public void onResponse(Call<ModelBuyNow> call, Response<ModelBuyNow> response) {
 
                 if(response.body().getStatusCode().equals(200)){
+
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.PRICE,total.getText().toString() );
+                    bundle.putString(FirebaseAnalytics.Param.CURRENCY, "Pound");
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Van_Products");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle);
 
                     Integer orderid=response.body().getOrderid();
                     String string=String.valueOf(orderid);
@@ -1240,7 +1273,7 @@ public class Cart extends Fragment {
 
         final ProgressDialog progressDialog=new ProgressDialog(getActivity(),R.style.AlertDialogCustom);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage("Please Wait.......");
+        progressDialog.setMessage("Ordering.......");
         progressDialog.show();
 
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -1258,7 +1291,22 @@ public class Cart extends Fragment {
         //Defining retrofit api service
         ApiLogin_Interface service = retrofit.create(ApiLogin_Interface.class);
 
-        devicetoken= FirebaseInstanceId.getInstance().getToken();
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("Token", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        // Get new Instance ID token
+                        devicetoken = task.getResult();
+                    }
+                });
+
         service.SEND_QUOTE(json).enqueue(new Callback<ModelGetQuote>() {
             @Override
             public void onResponse(Call<ModelGetQuote> call, Response<ModelGetQuote> response) {
@@ -1330,6 +1378,7 @@ public class Cart extends Fragment {
                         }
                     });
                     dialog.show();
+                    dialog.setCancelable(false);
                     progressDialog.dismiss();
                 }
 
@@ -1384,12 +1433,16 @@ public class Cart extends Fragment {
 
                  else  if(txtvw_quote.getText().toString().equals("Quote")){
 
-                    drop_supplier.setVisibility(View.GONE);
+                    tv_drop_supplier.setText("Select Supplier");
+                     Paper.book().write("supplier_id","0");
+                    drop_supplier.setVisibility(View.VISIBLE);
                     layout_col_del.setVisibility(View.GONE);
                         Proceed.setText("Send Quotation");
                     }
 
                     else if (txtvw_quote.getText().toString().equals("Order")){
+
+                    tv_drop_supplier.setText("Select Supplier");
 
                     if(Paper.book().read("whole_seller", "5").equals("1")){
                         Paper.book().write("whole_seller","2");
@@ -1672,6 +1725,17 @@ public class Cart extends Fragment {
                 t.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Cart");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
     }
 
 }

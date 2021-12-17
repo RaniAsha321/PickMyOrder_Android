@@ -27,6 +27,10 @@
 
     </style>
 
+    <style name="CustomEditTextTheme" parent="TextAppearance.AppCompat">
+        <item name="colorAccent">@color/bluetheme</item>
+    </style>
+
     <style name="MyCheckBoxStyle" parent="AppTheme">
 
         <item name="colorAccent">@color/bluetheme</item>

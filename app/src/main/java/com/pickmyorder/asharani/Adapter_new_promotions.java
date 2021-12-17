@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.paperdb.Paper;
@@ -25,12 +24,12 @@ import io.paperdb.Paper;
 public class Adapter_new_promotions extends RecyclerView.Adapter<Adapter_new_promotions.ViewHolder> {
 
     Context mcontext;
-    List<Catalogdatum> mlist;
+    List<Shelvesdatum> mlist;
 
     String catlist;
 
 
-    public Adapter_new_promotions(Context context, List<Catalogdatum> mlist) {
+    public Adapter_new_promotions(Context context, List<Shelvesdatum> mlist) {
 
         this.mcontext=context;
         this.mlist=mlist;
@@ -41,7 +40,7 @@ public class Adapter_new_promotions extends RecyclerView.Adapter<Adapter_new_pro
     @Override
     public Adapter_new_promotions.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rowlayout_home_categories, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rowlayout_home_shelves, parent, false);
 
         return new ViewHolder(view);
     }
@@ -49,30 +48,41 @@ public class Adapter_new_promotions extends RecyclerView.Adapter<Adapter_new_pro
     @Override
     public void onBindViewHolder(@NonNull Adapter_new_promotions.ViewHolder holder, int position) {
 
-        holder.SectionName.setText(mlist.get(position).getSectionName());
-        Glide.with(mcontext).load(mlist.get(position).getCoverImage()).into(holder.CoverImage);
+        holder.SectionName.setText(mlist.get(position).getHeading());
+        Glide.with(mcontext).load(mlist.get(position).getSectionImage()).into(holder.CoverImage);
 
+      //  Glide.with(mcontext).load("https://app.pickmyorder.co.uk/images/cetalogues/18529857541617281088").into(holder.CoverImage);
 
+        Log.e("catlist_shelves",mlist.size()+"");
 
-
-
-        Log.e("catlist",catlist+"");
+        Log.e("catlist",mlist.get(position).getCetalouge()+"");
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                catlist = mlist.get(position).getCatalog();
+              //  catlist = mlist.get(position).getCatalog();
+                List<Cetalouge> myList = mlist.get(position).getCetalouge();
 
-                List<String> myList = new ArrayList<String>(Arrays.asList(catlist.split(",")));
+                if(myList.size() != 0){
 
-                Log.e("catlist55",myList+"");
 
-                Paper.book().write("CatImageList",myList);
+                    Log.e("catlist55",myList+"");
 
-                FragmentTransaction fragmentTransaction;
-                fragmentTransaction = ((AppCompatActivity) mcontext ).getSupportFragmentManager().beginTransaction().replace(R.id.containerr, new Catalogue_Promo_Images());
-                fragmentTransaction.commit();
+                    Paper.book().write("CatImageList",myList);
+
+                    FragmentTransaction fragmentTransaction;
+                    fragmentTransaction = ((AppCompatActivity) mcontext).getSupportFragmentManager().beginTransaction().addToBackStack("catalogs").replace(R.id.containerr, new Catalogue_Promo_Images());
+                    fragmentTransaction.commit();
+
+                }
+
+                else {
+
+                    Toast.makeText(mcontext,"No Catalog found",Toast.LENGTH_SHORT).show();
+
+                }
+
 
             }
         });

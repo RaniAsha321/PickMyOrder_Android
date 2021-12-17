@@ -25,7 +25,7 @@
         android:paddingTop="@dimen/_10sdp"
         android:paddingBottom="@dimen/_20sdp"
         android:gravity="center"
-        android:layout_weight="6.5"
+        android:layout_weight="7.5"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -68,6 +68,7 @@
 
             <TextView
 
+                android:id="@+id/shelves_headings"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:textStyle="bold"
                 android:textColor="@color/themeblack"
@@ -131,11 +132,11 @@
 
     <LinearLayout
 
-
-        android:paddingLeft="@dimen/_15sdp"
+        android:paddingLeft="@dimen/_7sdp"
+        android:paddingRight="@dimen/_7sdp"
         android:orientation="vertical"
         android:weightSum="8"
-        android:layout_weight="2.5"
+        android:layout_weight="1.5"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

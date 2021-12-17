@@ -2,20 +2,24 @@ package com.pickmyorder.asharani;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +40,9 @@ public class Search_items extends Fragment {
     boolean includeEdge = true;
     String userid;
     Wholeseller wholeseller;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    String search_selected_products,search_id ;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,12 +74,20 @@ public class Search_items extends Fragment {
             }
         });
 
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Search");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
         home.search_txtvw.setCursorVisible(false);
         userid=Paper.book().read("userid");
 
 
-        String search_selected_products=Paper.book().read("search");
-        String search_id=Paper.book().read("search_id");
+        search_selected_products=Paper.book().read("search");
+        search_id=Paper.book().read("search_id");
 
         Log.e("search_id",search_id+"");
         Log.e("search_id1",userid+"");
@@ -128,13 +143,20 @@ public class Search_items extends Fragment {
 
         if ((menu_Van_Stock != null) && (menu_Van_Stock.equals("1"))){
 
-            Paper.book().write("menu_Van_Stock","");
+           // Paper.book().write("menu_Van_Stock","");
 
             service.SEARCHING_CALL_VAN(home.search_txtvw.getText().toString().trim(),id,menu_Van_Stock).enqueue(new Callback<ModelSearching>() {
                 @Override
                 public void onResponse(Call<ModelSearching> call, Response<ModelSearching> response) {
 
                     if (response.body().getStatusCode().equals(200)) {
+
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM,search_selected_products);
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, search_id);
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
+
                         Log.e("search_id4","if");
 
                         mysearchlist = response.body().getSearchData();
@@ -165,11 +187,20 @@ public class Search_items extends Fragment {
 
         else {
 
+            Paper.book().write("menu_Van_Stock","");
+
             service.SEARCHING_CALL(home.search_txtvw.getText().toString().trim(),id).enqueue(new Callback<ModelSearching>() {
                 @Override
                 public void onResponse(Call<ModelSearching> call, Response<ModelSearching> response) {
 
                     if (response.body().getStatusCode().equals(200)) {
+
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, search_selected_products);
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, search_id);
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
+
 
                         mysearchlist = response.body().getSearchData();
                         // Paper.book().write("stripe_publish_key",response.body().getPublishkey());
@@ -194,11 +225,7 @@ public class Search_items extends Fragment {
                 }
             });
 
-
         }
-
-
-
 
     }
 
@@ -208,6 +235,17 @@ public class Search_items extends Fragment {
             home = (Home) activity;
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Search");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
+
 
 }
 

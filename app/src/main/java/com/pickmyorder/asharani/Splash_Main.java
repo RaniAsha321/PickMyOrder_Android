@@ -14,12 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import io.paperdb.Paper;
 
 public class Splash_Main extends AppCompatActivity {
 
     public static final String MY_PREFS_NAME = "MyPrefsFile";
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     private static int SPLASH_TIME_OUT = 4000;
 
     @Override
@@ -38,7 +40,14 @@ public class Splash_Main extends AppCompatActivity {
 
         /********************************************************************************************************************************************/
 
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Splash");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
 
         /************************************************GET SAVED VALUES FROM SHARED PREFERENCE********************************************************************************/
@@ -66,6 +75,8 @@ public class Splash_Main extends AppCompatActivity {
         final String Wholeseller_engineer_id = sp1.getString("Wholeseller_engineer_id", null);
         final String business_name = sp1.getString("business_name", null);
         final String postcode = sp1.getString("city", null);
+        final String vanstock = sp1.getString("vanstock", null);
+
 
         if (Paper.book().read("permission_wholeseller", "5").equals("1")) {
             if (!(unm == null) && !(pass == null)) {
@@ -94,6 +105,7 @@ public class Splash_Main extends AppCompatActivity {
                         intent.putExtra("permission_wholeseller", permission_wholeseller);
                         intent.putExtra("Wholeseller_engineer_id", Wholeseller_engineer_id);
                         intent.putExtra("business_name", business_name);
+                        intent.putExtra("vanstock", vanstock);
 
                         /***************************************************************************************************************************************************************/
 
@@ -102,6 +114,8 @@ public class Splash_Main extends AppCompatActivity {
                         finish();
                     }
                 }, SPLASH_TIME_OUT);
+
+                Paper.book().write("vanstock", vanstock);
 
             }
 
@@ -118,6 +132,7 @@ public class Splash_Main extends AppCompatActivity {
                     }
                 }, SPLASH_TIME_OUT);
             }
+
 
 
         }
@@ -153,6 +168,8 @@ public class Splash_Main extends AppCompatActivity {
                         intent.putExtra("permission_wholeseller", permission_wholeseller);
                         intent.putExtra("Wholeseller_engineer_id", Wholeseller_engineer_id);
                         intent.putExtra("business_name", business_name);
+                        intent.putExtra("vanstock", vanstock);
+
 
                         /***************************************************************************************************************************************************************/
 
@@ -161,6 +178,8 @@ public class Splash_Main extends AppCompatActivity {
                         finish();
                     }
                 }, SPLASH_TIME_OUT);
+
+                Paper.book().write("vanstock", vanstock);
 
             }
 
@@ -192,6 +211,8 @@ public class Splash_Main extends AppCompatActivity {
                             intent.putExtra("permission_wholeseller", permission_wholeseller);
                             intent.putExtra("Wholeseller_engineer_id", Wholeseller_engineer_id);
                             intent.putExtra("business_name", business_name);
+                            intent.putExtra("vanstock", vanstock);
+
 
                             /***************************************************************************************************************************************************************/
 
@@ -229,6 +250,8 @@ public class Splash_Main extends AppCompatActivity {
                             intent.putExtra("permission_wholeseller", permission_wholeseller);
                             intent.putExtra("Wholeseller_engineer_id", Wholeseller_engineer_id);
                             intent.putExtra("business_name", business_name);
+                            intent.putExtra("vanstock", vanstock);
+
 
                             /***************************************************************************************************************************************************************/
 
@@ -241,7 +264,7 @@ public class Splash_Main extends AppCompatActivity {
 
                 }
 
-
+                Paper.book().write("vanstock", vanstock);
 
             }
 
@@ -259,9 +282,20 @@ public class Splash_Main extends AppCompatActivity {
                 }, SPLASH_TIME_OUT);
             }
 
+
+
         }
 
     }
 
- }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Splash");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
+}
 

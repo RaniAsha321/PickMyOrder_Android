@@ -32,8 +32,19 @@
         android:layout_height="wrap_content"
         android:text="Product Specification" />
 
-    <TextView
+            <WebView
 
+                android:id="@+id/web_specification"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="WebViewLayout">
+
+            </WebView>
+
+
+            <TextView
+
+        android:visibility="gone"
         android:id="@+id/specification"
         android:layout_marginBottom="20dp"
         android:textColor="#333e48"

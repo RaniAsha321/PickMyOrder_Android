@@ -8,6 +8,8 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -26,8 +28,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import com.google.firebase.iid.FirebaseInstanceId;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.pickmyorder.asharani.Payment_Stripe.AddPayment;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +55,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Cart_Summary extends Fragment {
 
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     Context contextd;
     int data33;
     TextView sub_total,vat,total;
@@ -123,6 +130,14 @@ public class Cart_Summary extends Fragment {
 
         jsonArray = new JSONArray();
 
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Cart Summary");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
         myDb=new databaseSqlite(getActivity());
         cartMenuList=myDb.getAllModelCartMenu();
 
@@ -139,11 +154,9 @@ public class Cart_Summary extends Fragment {
             btn_payment.setVisibility(View.GONE);
         }
 
-        else  if(Paper.book().read("permission_wholeseller", "5").equals("1")  || Paper.book().read("ViewWholesellerPage", "5").equals("1")  ) {
+        else if(Paper.book().read("permission_wholeseller", "5").equals("1")  || Paper.book().read("ViewWholesellerPage", "5").equals("1")  ) {
            btn_payment.setVisibility(View.VISIBLE);
         }
-
-
 
         else {
 
@@ -188,7 +201,7 @@ public class Cart_Summary extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-
+                    Log.e("deleveryboy",delivery_instruction+"");
                     if((!delivery_Date.getText().toString().equals("Delivery")) || (!collection_date.getText().toString().equals("Collection")) )
                     {
                         delivery_instruction=del_address.getText().toString().trim();
@@ -460,11 +473,11 @@ public class Cart_Summary extends Fragment {
     }
 
     private void CartAPI(final String json) {
-/*
+
         final ProgressDialog progressDialog=new ProgressDialog(getActivity(),R.style.AlertDialogCustom);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage("Please Wait.......");
-        progressDialog.show();*/
+        progressDialog.setMessage("Ordering.......");
+        progressDialog.show();
 
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(60, TimeUnit.SECONDS)
@@ -481,12 +494,33 @@ public class Cart_Summary extends Fragment {
         //Defining retrofit api service
         ApiLogin_Interface service = retrofit.create(ApiLogin_Interface.class);
 
-        devicetoken=FirebaseInstanceId.getInstance().getToken();
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("Token", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        // Get new Instance ID token
+                        devicetoken = task.getResult();
+                    }
+                });
+
         service.CART_CALL(json).enqueue(new Callback<ModelBuyNow>() {
             @Override
             public void onResponse(Call<ModelBuyNow> call, Response<ModelBuyNow> response) {
 
                 if(response.body().getStatusCode().equals(200)){
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.PRICE,total.getText().toString() );
+                    bundle.putString(FirebaseAnalytics.Param.CURRENCY, "Pound");
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Products");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle);
 
                     Integer orderid=response.body().getOrderid();
                     String string=String.valueOf(orderid);
@@ -548,7 +582,7 @@ public class Cart_Summary extends Fragment {
                     dialog.show();
 
                     dialog.setCancelable(false);
-                  /*  progressDialog.dismiss();*/
+                    progressDialog.dismiss();
                 }
 
                 else
@@ -566,7 +600,7 @@ public class Cart_Summary extends Fragment {
 
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
-              //  progressDialog.dismiss();
+                progressDialog.dismiss();
             }
         });
     }
@@ -686,6 +720,8 @@ public class Cart_Summary extends Fragment {
 
         String cart_string = orderobj.toString();
 
+        Log.e("cart_string",cart_string+"");
+
         Paper.book().write("Cart_Array_for_PAyment",cart_string);
         Paper.book().write("Cart_Payment",cart_string);
     }
@@ -695,6 +731,17 @@ public class Cart_Summary extends Fragment {
         if(activity.getClass()== AddPayment.class){
             add_payment = (AddPayment) activity;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Cart Summary");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
     }
 
 }

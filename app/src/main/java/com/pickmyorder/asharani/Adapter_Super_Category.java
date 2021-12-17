@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.List;
 import io.paperdb.Paper;
 
@@ -23,6 +27,7 @@ public class Adapter_Super_Category extends RecyclerView.Adapter<Adapter_Super_C
     Context mContext;
     List<Product> product;
     String publishkey;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public Adapter_Super_Category(List<Product> products, Context mcontext, String publishkey) {
 
@@ -34,6 +39,11 @@ public class Adapter_Super_Category extends RecyclerView.Adapter<Adapter_Super_C
     @Override
     public Adapter_Super_Category.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_layout_super_category, viewGroup, false);
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
+
+
         return new ViewHolder(view);
     }
 
@@ -41,12 +51,13 @@ public class Adapter_Super_Category extends RecyclerView.Adapter<Adapter_Super_C
     public void onBindViewHolder(@NonNull Adapter_Super_Category.ViewHolder viewHolder, int i) {
 
         viewHolder.product_name.setText(product.get(i).getTitle());
-        Glide.with(mContext).load(product.get(i).getImage()).into(viewHolder.product_image);
+
+        Glide.with(mContext).load(product.get(i).getImage()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(viewHolder.product_image);
 
         String permission_see_cost=Paper.book().read("permission_see_cost");
        // String is_Van = Paper.book().read("vanstock");
 
-        if(product.get(i).getVanStock().equals("1")){
+        if(product.get(i).getVanStock() != null && product.get(i).getVanStock().equals("1")){
 
             if (product.get(i).getIn_stock() != null && Integer.valueOf(product.get(i).getIn_stock()) < 1 ){
 
@@ -74,9 +85,6 @@ public class Adapter_Super_Category extends RecyclerView.Adapter<Adapter_Super_C
             Paper.book().write("in_stock","0");
         }
 
-
-
-
         if(permission_see_cost.equals("1")){
 
             viewHolder.price.setText(product.get(i).getPrice());
@@ -97,6 +105,12 @@ public class Adapter_Super_Category extends RecyclerView.Adapter<Adapter_Super_C
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                Bundle product1 = new Bundle();
+                product1.putString("Product_id", product.get(i).getProductId());
+                product1.putString("Product_name",product.get(i).getTitle());
+                mFirebaseAnalytics.logEvent("Product", product1);
 
                 FragmentTransaction fragmentTransaction;
                 fragmentTransaction=((AppCompatActivity)mContext).getSupportFragmentManager().beginTransaction().addToBackStack("mo").replace(R.id.containerr,new Product_Detail());

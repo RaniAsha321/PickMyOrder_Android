@@ -3,10 +3,6 @@ package com.pickmyorder.asharani;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -16,8 +12,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +40,7 @@ public class Projects extends Fragment {
     LinearLayoutManager layoutManager;
     Adapter_projects adapter_projects;
     LinearLayout layout_add_project;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,9 +72,20 @@ public class Projects extends Fragment {
             }
         });
 
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+
         mylist= new ArrayList<>();
         ((Home)getActivity()).hideView(true);
         home.nav_search_layout.setVisibility(View.VISIBLE);
+
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Projects");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
 
         recyclerView=view.findViewById(R.id.projects_recyclervw);
         btn_add=view.findViewById(R.id.addprobtn);
@@ -87,7 +103,7 @@ public class Projects extends Fragment {
             else {
 
                 Paper.book().write("layout_project_edit","0");
-                layout_add_project.setVisibility(View.VISIBLE);
+                layout_add_project.setVisibility(View.GONE);
 
             }
         }
@@ -104,7 +120,7 @@ public class Projects extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent= new Intent(getActivity(),Project_details_add_project.class);
+                Intent intent= new Intent(getActivity(), Project_details_add_project.class);
                 startActivity(intent);
 
             }
@@ -176,6 +192,16 @@ public class Projects extends Fragment {
         if(activity.getClass()== Home.class){
             home = (Home) activity;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Projects");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
 

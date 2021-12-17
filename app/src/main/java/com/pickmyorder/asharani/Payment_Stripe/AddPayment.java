@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -356,6 +357,8 @@ public class AddPayment extends AppCompatActivity implements Adapter_Saved_Cards
         String Cart_Payment=Paper.book().read("Cart_Payment");
 
         String WholsalerBusinessId=Paper.book().read("save_business");
+
+
         if(WholsalerBusinessId !=null){
 
             wholeseller=WholsalerBusinessId;
@@ -381,6 +384,22 @@ public class AddPayment extends AppCompatActivity implements Adapter_Saved_Cards
 
         //Defining retrofit api service
         final ApiLogin_Interface service = retrofit.create(ApiLogin_Interface.class);
+
+        Log.e("deleveryboy1",data+"");
+        Log.e("deleveryboy2",pay_token+"");
+        Log.e("deleveryboy3",Cart_Array_for_PAyment+"");
+        Log.e("deleveryboy4",card_number+"");
+        Log.e("deleveryboy5",exp_month+"");
+        Log.e("deleveryboy6",exp_year+"");
+        Log.e("deleveryboy7",brand_type+"");
+        Log.e("deleveryboy8",cvc+"");
+
+        Log.e("deleveryboy9",save_status+"");
+        Log.e("deleveryboy10",wholeseller+"");
+
+
+
+
 
         service.PAYMENT_CALL(data,pay_token,"gbp","Payment Test",Cart_Array_for_PAyment,card_number,exp_month,exp_year,brand_type,cvc,save_status,wholeseller).enqueue(new Callback<ModelPayment>() {
             @Override

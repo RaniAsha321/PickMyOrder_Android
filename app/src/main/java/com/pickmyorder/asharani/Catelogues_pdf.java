@@ -112,6 +112,8 @@ public class Catelogues_pdf extends Fragment {
 
                     }
 
+                    Paper.book().write("shelf",mlist);
+
                     adapter_catalogues=new Adapter_Catalogues_New(getActivity(),mlist);
                     catalogues_recyclerview.addItemDecoration(new ItemOffsetDecoration(spanCount, spacing, includeEdge));
 

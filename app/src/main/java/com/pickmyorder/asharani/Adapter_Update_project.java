@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 import io.paperdb.Paper;
@@ -62,7 +63,7 @@ public class Adapter_Update_project extends RecyclerView.Adapter<Adapter_Update_
                     }
 
                     else {
-
+                        selectedStrings.remove(separated[0]);
                         Paper.book().write("check","");
                         Paper.book().write("checkid","");
                     }
@@ -101,6 +102,9 @@ public class Adapter_Update_project extends RecyclerView.Adapter<Adapter_Update_
 
                 int checked=Paper.book().read("checked");
                 String checkid =  Paper.book().read("checkid");
+
+                Log.e("thing",checked+"");
+                Log.e("thing2",checkid+"");
 
                 if ((checked!=0) ){
 
@@ -193,7 +197,7 @@ public class Adapter_Update_project extends RecyclerView.Adapter<Adapter_Update_
 
 
 
-       viewHolder.layout_update_pro.setOnClickListener(new View.OnClickListener() {
+     /*  viewHolder.layout_update_pro.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
 
@@ -209,7 +213,7 @@ public class Adapter_Update_project extends RecyclerView.Adapter<Adapter_Update_
                }
 
            }
-       });
+       });*/
 
         dialog.findViewById(R.id.txt_update_cancel).setOnClickListener(new View.OnClickListener() {
             @Override

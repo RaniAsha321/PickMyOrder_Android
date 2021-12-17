@@ -8,10 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,10 +23,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import io.paperdb.Paper;
 import retrofit2.Call;
@@ -40,10 +43,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Login extends AppCompatActivity {
 
     public static final String MY_PREFS_NAME = "MyPrefsFile";
-    Button btnLogin;
+    Button btnLogin,btn_signup;
     TextView txt_forgot_password;
     EditText user_email, user_password;
     String deviceid;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,12 +55,21 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Login");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
         user_email = findViewById(R.id.edtxt_email);
         user_password = findViewById(R.id.edtxt_password);
         txt_forgot_password = findViewById(R.id.forgot_password);
         user_email.setRawInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         user_password.setRawInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         btnLogin = findViewById(R.id.btn_login);
+        btn_signup = findViewById(R.id.btn_signup);
 
         user_email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -90,10 +103,21 @@ public class Login extends AppCompatActivity {
         txt_forgot_password.setPaintFlags(txt_forgot_password.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);  // SET UNDERLINE BELOW FORGOT PASSWORD
         forgot_Password();
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        btn_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                String url = "https://app.pickmyorder.co.uk/index";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+
+            }
+        });
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
                 if(!TextUtils.isEmpty(user_email.getText().toString())){     // VALIDATE EITHER EMAIL IS FILLED OR NOT
 
@@ -102,20 +126,27 @@ public class Login extends AppCompatActivity {
 
     /**************************************************Register Device to the Firebase************************************************************/
 
-                        FirebaseInstanceId.getInstance().getInstanceId()
-                                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+
+                        FirebaseMessaging.getInstance().getToken()
+                                .addOnCompleteListener(new OnCompleteListener<String>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                    public void onComplete(@NonNull Task<String> task) {
                                         if (!task.isSuccessful()) {
+                                            Log.w("Token", "Fetching FCM registration token failed", task.getException());
                                             return;
                                         }
 
+                                        Log.e("deviceid","1");
+                                        // Get new FCM registration token
+                                        String token = task.getResult();
                                         // Get new Instance ID token
-                                        deviceid = task.getResult().getToken();
+                                        deviceid = task.getResult();
 
                                         Log.e("deviceid",deviceid+"");
                                         Paper.book().write("deviceid",deviceid);
-                                        login();                        // Calling Login Api
+                                        login();
+
+
                                     }
                                 });
     /***************************************************************End***************************************************************************/
@@ -138,6 +169,8 @@ public class Login extends AppCompatActivity {
         txt_forgot_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+              //  throw new RuntimeException();
 
                 Intent intent = new Intent(Login.this, Forgot_Password.class);
                 startActivity(intent);
@@ -214,6 +247,8 @@ public class Login extends AppCompatActivity {
                 //Defining retrofit api service
                 ApiLogin_Interface service = retrofit.create(ApiLogin_Interface.class);
 
+                Log.e("bname1","test");
+
                 (service.getClient("application/x-www-form-urlencoded", user_email.getText().toString(),
                         user_password.getText().toString(),deviceid,"Android")).enqueue(new Callback<ModelLogin>() {
 
@@ -222,6 +257,8 @@ public class Login extends AppCompatActivity {
 
                         if (response.body().getStatusCode().equals(200)) {
 
+                            mFirebaseAnalytics.setUserId(response.body().getId());
+
                             Log.e("business_name1",response.body().getBussinessName()+"");
 
                             if (response.body().getPermissionWholeseller().equals("0")) {
@@ -229,6 +266,7 @@ public class Login extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
                                 Log.e("usernotfound",response.body().getMessage()+"");
+
                             if (response.body().getViewWholesellerPage().equals("1")) {
 
 
@@ -246,8 +284,8 @@ public class Login extends AppCompatActivity {
                                     intent.putExtra("Image", response.body().getImage());
                                     intent.putExtra("permission_cat", response.body().getCategorie());
                                     intent.putExtra("permission_orders", response.body().getOrders());
-                                    intent.putExtra("permission_pro_details", response.body().getCategorie());
-                                    intent.putExtra("permission_catelogues", response.body().getOrders());
+                                    intent.putExtra("permission_pro_details", response.body().getProjectDetails());
+                                    intent.putExtra("permission_catelogues", response.body().getCatalogues());
                                     intent.putExtra("permission_all_orders", response.body().getAllOrders());
                                     intent.putExtra("permission_awaiting", response.body().getOrdersToApprove());
                                     intent.putExtra("permission_see_cost", response.body().getSeecost());
@@ -274,8 +312,8 @@ public class Login extends AppCompatActivity {
                                     intent.putExtra("Image", response.body().getImage());
                                     intent.putExtra("permission_cat", response.body().getCategorie());
                                     intent.putExtra("permission_orders", response.body().getOrders());
-                                    intent.putExtra("permission_pro_details", response.body().getCategorie());
-                                    intent.putExtra("permission_catelogues", response.body().getOrders());
+                                    intent.putExtra("permission_pro_details", response.body().getProjectDetails());
+                                    intent.putExtra("permission_catelogues", response.body().getCatalogues());
                                     intent.putExtra("permission_all_orders", response.body().getAllOrders());
                                     intent.putExtra("permission_awaiting", response.body().getOrdersToApprove());
                                     intent.putExtra("permission_see_cost", response.body().getSeecost());
@@ -308,8 +346,8 @@ public class Login extends AppCompatActivity {
                                 intent.putExtra("Image", response.body().getImage());
                                 intent.putExtra("permission_cat", response.body().getCategorie());
                                 intent.putExtra("permission_orders", response.body().getOrders());
-                                intent.putExtra("permission_pro_details", response.body().getCategorie());
-                                intent.putExtra("permission_catelogues", response.body().getOrders());
+                                intent.putExtra("permission_pro_details", response.body().getProjectDetails());
+                                intent.putExtra("permission_catelogues", response.body().getCatalogues());
                                 intent.putExtra("permission_all_orders", response.body().getAllOrders());
                                 intent.putExtra("permission_awaiting", response.body().getOrdersToApprove());
                                 intent.putExtra("permission_see_cost", response.body().getSeecost());
@@ -331,8 +369,11 @@ public class Login extends AppCompatActivity {
                             /***************************************************USING PAPER DB LIBRARAY TO STORE DATA LOCALY" ***************************************************************/
 
                                 Log.e("vanstock4",response.body().getVanstock());
+                                Log.e("getcatalogues",response.body().getCatalogues());
+                                Log.e("business_name22",response.body().getBussinessName()+"");
 
-
+                            Paper.book().write("UserImage", response.body().getImage());
+                            Paper.book().write("userid", response.body().getId());
                             Paper.book().write("unique_id", response.body().getId());
                             Paper.book().write("vanstock", response.body().getVanstock());
                             Paper.book().write("permission_Quote", response.body().getQuotes());
@@ -352,6 +393,7 @@ public class Login extends AppCompatActivity {
                             Paper.book().write("ViewWholesellerPage", response.body().getViewWholesellerPage());
                             Paper.book().write("business_id", response.body().getBusinessId());
                             Paper.book().write("stripe_publish_key", response.body().getPublishKey());
+                            Paper.book().write("permission_Addtocart", response.body().getAddtocart());
 
                             /*************************************************************End***********************************************************************************************/
 
@@ -382,6 +424,7 @@ public class Login extends AppCompatActivity {
                             editor.putString("business_name", response.body().getBussinessName());
                             editor.putString("ViewWholesellerPage", response.body().getViewWholesellerPage());
                             editor.putString("vanstock", response.body().getVanstock());
+                            editor.putString("business_validity", response.body().getBusiness_validity());
 
                             editor.apply();
                         }
@@ -416,10 +459,17 @@ public class Login extends AppCompatActivity {
      /************************************************************End********************************************************************************/
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-
-
-
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Login");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
+}
+
+
 
 

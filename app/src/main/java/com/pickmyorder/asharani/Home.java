@@ -9,16 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import com.google.android.material.navigation.NavigationView;
-import com.pickmyorder.asharani.Payment_Stripe.AddPayment;
-
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -32,13 +26,29 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.pickmyorder.asharani.Payment_Stripe.AddPayment;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.paperdb.Paper;
@@ -49,16 +59,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener ,MyInterface, Nav_Drawer {
+        implements NavigationView.OnNavigationItemSelectedListener , MyInterface, Nav_Drawer {
 
     public static final String MY_PREFS_NAME = "MyPrefsFile";
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     AddPayment addPayment;
-    LinearLayout Search_postcode_layout,Search_product_layout,layout_search_view;
+    LinearLayout Search_postcode_layout,Search_product_layout,layout_search_view,layout_post_drop_home;
     Orders_Menu sizedata;
     int awaiting_data;
     TextView heading,search_postcode,textview_version;
-    databaseSqlite databaseSqlite;
+    com.pickmyorder.asharani.databaseSqlite databaseSqlite;
     Adapter_Cart_Menu adapterCartMenu;
     Search_items items;
     EditText search_txtvw;
@@ -80,6 +90,10 @@ public class Home extends AppCompatActivity
     List<CityList> myCityList;
     Adapter_Select_City adapter_select_city;
     SharedPreferences sharedPreferences;
+    final Handler handler = new Handler();
+    final int delay = 1000; // 1000 milliseconds == 1 second
+    long Todaymsecond;
+    String business_validity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,10 +120,20 @@ public class Home extends AppCompatActivity
         sizedata=new Orders_Menu();
         search_txtvw.setRawInputType(InputType.TYPE_CLASS_TEXT);
         search_layout = findViewById(R.id.searchview_layout);
+        layout_post_drop_home = findViewById(R.id.layout_post_drop_home);
         databaseSqlite = new databaseSqlite(getApplicationContext());
         addPayment=new AddPayment();
         myList=new ArrayList<>();
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Home");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
+      //  search_postcode.setTextColor(getResources().getColor(R.color.bluetheme));
+      //  search_txtvw.setTextColor(getResources().getColor(R.color.bluetheme));
         /*********************************************** SETTING STATUS BAR WHITE ******************************************************************/
 
         if (android.os.Build.VERSION.SDK_INT >= 21) {
@@ -121,6 +145,11 @@ public class Home extends AppCompatActivity
 
         /************************************************************End*****************************************************************************/
 
+        SharedPreferences sharedPreferences =getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        business_validity =  sharedPreferences.getString("business_validity",null);
+        sharedPreferences.getAll();
+
+        Paper.book().write("isVan","0");
 
         sharedPreferences =getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         sharedPreferences.getString("role", "");
@@ -333,6 +362,9 @@ public class Home extends AppCompatActivity
 
             }
 
+            String catalog = Paper.book().read("permission_cateloguess");
+            Log.e("catalog",catalog+"");
+
             if(Paper.book().read("permission_cateloguess", "5").equals("1")){
 
                 nav_Menu.findItem(R.id.nav_catalogue).setVisible(true);
@@ -411,13 +443,13 @@ public class Home extends AppCompatActivity
 
                     if(Paper.book().read("permission_Quote", "5").equals("1")){
 
-                        nav_Menu.findItem(R.id.nav_catalogue).setVisible(true);
+                        nav_Menu.findItem(R.id.nav_quotes).setVisible(true);
 
                     }
 
                     else if(Paper.book().read("permission_Quote", "5").equals("0")){
 
-                        nav_Menu.findItem(R.id.nav_catalogue).setVisible(false);
+                        nav_Menu.findItem(R.id.nav_quotes).setVisible(false);
                     }
                 }
            // }
@@ -425,18 +457,44 @@ public class Home extends AppCompatActivity
         }
 
         Menu nav_Menu = navigationView.getMenu();
-        if(Paper.book().read("permission_Quote", "5").equals("1")){
+
+        if(Paper.book().read("permission_cateloguess", "5").equals("1")){
 
             nav_Menu.findItem(R.id.nav_catalogue).setVisible(true);
 
         }
 
-        else if(Paper.book().read("permission_Quote", "5").equals("0")){
+        else if(Paper.book().read("permission_cateloguess", "5").equals("0")){
 
             nav_Menu.findItem(R.id.nav_catalogue).setVisible(false);
         }
 
-    /*******************************************************************End**************************************************************************/
+
+        if(Paper.book().read("permission_Quote", "5").equals("1")){
+
+            nav_Menu.findItem(R.id.nav_quotes).setVisible(true);
+
+        }
+
+        else if(Paper.book().read("permission_Quote", "5").equals("0")){
+
+            nav_Menu.findItem(R.id.nav_quotes).setVisible(false);
+        }
+
+
+        if(Paper.book().read("permission_wholeseller", "5").equals("1")){
+
+            nav_Menu.findItem(R.id.nav_wholesellers).setVisible(true);
+
+        }
+
+        else if(Paper.book().read("permission_wholeseller", "5").equals("0")){
+
+            nav_Menu.findItem(R.id.nav_wholesellers).setVisible(false);
+        }
+
+
+        /*******************************************************************End**************************************************************************/
 
 
         if(!(String.valueOf(databaseSqlite.getNotesCount()).equals("0"))) {
@@ -516,7 +574,7 @@ public class Home extends AppCompatActivity
             }
         });
 
-        search_postcode.setOnClickListener(new View.OnClickListener() {
+        layout_post_drop_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -538,9 +596,10 @@ public class Home extends AppCompatActivity
 
                 String menu_Van_Stock=Paper.book().read("menu_Van_Stock");
 
+                //  Log.e("qwerty_search","1");
 
                 if ((Search_postcode_layout.getVisibility() == View.GONE) &&(Search_product_layout.getVisibility() == View.VISIBLE) ){
-
+                    Log.e("qwerty_search","1");
                     if(search_id!=null){
                         search_txtvw.requestFocus();
                         search_txtvw.requestFocusFromTouch();
@@ -560,23 +619,43 @@ public class Home extends AppCompatActivity
 
                 if ((Search_postcode_layout.getVisibility() == View.VISIBLE) &&(Search_product_layout.getVisibility() == View.GONE) ){
 
+                    Log.e("qwerty_search","2");
                         search_txtvw.requestFocus();
                         search_txtvw.requestFocusFromTouch();
-                        fragmentTransaction=getSupportFragmentManager().beginTransaction().addToBackStack("cate").replace(R.id.containerr, new Wholeseller());
+                   // Paper.book().write("city",search_postcode.getText().toString());
+
+                    SharedPreferences pref = getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("city", search_postcode.getText().toString());
+                    editor.apply();
+
+                    fragmentTransaction=getSupportFragmentManager().beginTransaction().addToBackStack("cate").replace(R.id.containerr, new Wholeseller());
                         fragmentTransaction.commit();
 
                 }
 
 
                 if  ((Search_product_layout.getVisibility() == View.GONE) &&(Search_postcode_layout.getVisibility() == View.VISIBLE)) {
+
+                    Log.e("qwerty_search","3");
                     // Either gone or invisible
                     if(!(search_postcode.getText().toString().equals(""))){
 
+                        Log.e("qwerty_search","4");
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("city", search_postcode.getText().toString());
+                        editor.apply();
+
+                        Log.e("qwerty_search2",search_postcode.getText().toString()+"");
+                       // Paper.book().write("city",search_postcode.getText().toString());
                                 fragmentTransaction=getSupportFragmentManager().beginTransaction().addToBackStack("cate").replace(R.id.containerr, new Wholeseller());
                                 fragmentTransaction.commit();
                     }
 
                     else if(search_txtvw.getHint().toString().equals("Search Products")){
+
+                        Log.e("qwerty_search","5");
                         search_txtvw.requestFocus();
                         search_txtvw.requestFocusFromTouch();
                         fragmentTransaction=getSupportFragmentManager().beginTransaction().addToBackStack("cate").replace(R.id.containerr, new Search_items());
@@ -835,7 +914,7 @@ public class Home extends AppCompatActivity
 
             case R.id.nav_catalogue:
 
-                fragmentTransaction=getSupportFragmentManager().beginTransaction().replace(R.id.containerr,new New_Catalogues());
+                fragmentTransaction=getSupportFragmentManager().beginTransaction().replace(R.id.containerr,new Dynamic_Catalogous());
                 fragmentTransaction.commit();
                 search_txtvw.setText("");
 
@@ -1078,5 +1157,99 @@ public class Home extends AppCompatActivity
         drawerLayout.openDrawer(Gravity.START);
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Home");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
+        Business_Validity_Check(business_validity);
+
+    }
+
+
+    private void Business_Validity_Check(String business_validity) {
+
+        if(business_validity != null && !business_validity.equals("")){
+
+            processCurrentTime(business_validity);
+
+        }
+    }
+
+    private void processCurrentTime(String business_validity) {
+
+        if (!isDataConnectionAvailable(Home .this)) {
+            showerrorDialog("No Network coverage!");
+        } else {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            try {
+                Date mDate = sdf.parse(business_validity);
+                long timeInMilliseconds = mDate.getTime();
+
+                Log.e("timeInMilliseconds",timeInMilliseconds+"");
+                checkExpiry(timeInMilliseconds);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public static boolean isDataConnectionAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+        if (info == null)
+            return false;
+
+        return connectivityManager.getActiveNetworkInfo().isConnected();
+    }
+
+    private void checkExpiry(long timestampinMillies) {
+
+        Date What_Is_Today= Calendar.getInstance().getTime();
+        SimpleDateFormat Dateformat = new SimpleDateFormat("yyyy/MM/dd");
+        String Today=Dateformat.format(What_Is_Today);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            Date mDate = sdf.parse(Today);
+            Todaymsecond = mDate.getTime();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (timestampinMillies <= Todaymsecond) {
+            showerrorDialog("Validity of Trial Version has been Expired");
+        }
+
+    }
+
+    private void showerrorDialog(String data) {
+
+        final Dialog dialog= new Dialog(Home.this);
+        dialog.setContentView(R.layout.custom_dialog_trial);
+        dialog.show();
+        Button btn_continue = dialog.findViewById(R.id.btn_continue_trial);
+
+        btn_continue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(),Login.class);
+                startActivity(intent);
+            }
+        });
+
+        dialog.setCancelable(false);
+    }
+
 
 }

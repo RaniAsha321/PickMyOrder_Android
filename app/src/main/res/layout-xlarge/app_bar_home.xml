@@ -198,6 +198,8 @@
 
                        <EditText
 
+                           android:theme="@style/CustomEditTextTheme"
+                           android:textCursorDrawable="@drawable/color_cursor"
                            android:textColor="@color/bluetheme"
                            android:inputType="text"
                            android:filterTouchesWhenObscured="false"
@@ -209,6 +211,7 @@
                            android:paddingLeft="2dp"
                            android:textSize="@dimen/_12sdp"
                            android:hint="Search Products"
+                           android:textColorHint="#333e48"
                            android:background="@null"
                            android:layout_marginLeft="15dp"
                            android:focusable="true"
@@ -232,14 +235,19 @@
 
                    <LinearLayout
 
+                       android:orientation="horizontal"
+                       android:weightSum="5"
                        android:visibility="gone"
                        android:id="@+id/Search_postcode_layout"
                        android:layout_weight="1.2"
                        android:layout_width="match_parent"
                        android:layout_height="match_parent">
 
-                       <TextView
+                       <EditText
 
+                           style="@style/CustomEditTextTheme"
+                           android:textCursorDrawable="@drawable/color_cursor"
+                           android:layout_weight="0.5"
                            android:textColor="@color/bluetheme"
                            android:filterTouchesWhenObscured="false"
                            android:singleLine="true"
@@ -249,12 +257,30 @@
                            android:fontFamily="@font/roboto_medium"
                            android:paddingLeft="2dp"
                            android:textSize="@dimen/_12sdp"
-                           android:text="Search City"
+                           android:hint="Type City or Search "
                            android:background="@null"
                            android:layout_marginLeft="10dp"
                            android:layout_marginBottom="5dp"
                            android:layout_width="match_parent"
                            android:layout_height="match_parent" />
+
+                       <LinearLayout
+
+                           android:id="@+id/layout_post_drop_home"
+                           android:gravity="center"
+                           android:layout_weight="4.5"
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent">
+
+                           <ImageView
+
+                               android:background="@drawable/dropmenu"
+                               android:layout_gravity="center"
+                               android:layout_width="@dimen/_10sdp"
+                               android:layout_height="@dimen/_10sdp" />
+
+
+                       </LinearLayout>
 
                    </LinearLayout>
 

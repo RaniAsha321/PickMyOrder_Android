@@ -4,6 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,12 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +44,7 @@ public class Wholeseller extends Fragment {
     List<Wholselear> wholseller_list;
     List<Wholselear> my_list;
     Adapter_wholesellers adapter_wholesellers;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     Home home;
@@ -57,6 +61,9 @@ public class Wholeseller extends Fragment {
         recyclerviewwholeseller = view.findViewById(R.id.recyclerview_home_categories);
         ((Home)getActivity()).hideView(false);
         my_list= new ArrayList<>();
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
         view.setFocusableInTouchMode(true);
         view.requestFocus();
@@ -78,20 +85,32 @@ public class Wholeseller extends Fragment {
 
         });
 
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Wholesalers");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
+
         SharedPreferences sharedPreferences =getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
 
         home.nav_search_layout.setVisibility(View.VISIBLE);
 
         String postcode = Paper.book().read("city");
+
+        Log.e("qsearch",postcode+"");
+
         if(postcode!=null) {
 
             if(postcode.equals("0")){
 
+                Log.e("qsearch","2");
                 getWholesellers(postcode);
             }
 
             else {
 
+                Log.e("qsearch","3");
                 getWholesellers(sharedPreferences.getString("city", ""));
             }
         }
@@ -167,4 +186,17 @@ public class Wholeseller extends Fragment {
             home = (Home) activity;
         }
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Wholesalers");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
+
+
 }

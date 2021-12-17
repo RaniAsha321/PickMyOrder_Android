@@ -2,19 +2,23 @@ package com.pickmyorder.asharani;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +37,7 @@ public class Home_Sub_Sub_Category extends Fragment {
     List<Model_Home_Super_sub_Category> list;
     int spanCount = 2;
     int spacing = 25;
+    private FirebaseAnalytics mFirebaseAnalytics;
     boolean includeEdge = true;
     List<SuperSubCategory> supersubcategories;
 
@@ -61,6 +66,13 @@ public class Home_Sub_Sub_Category extends Fragment {
                 return false;
             }
         });
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Sub-Sub-Category");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
         recyclerviewHomeCategories=view.findViewById(R.id.recyclerview_home_sub_sub_categories);
 
@@ -91,6 +103,8 @@ public class Home_Sub_Sub_Category extends Fragment {
 
     private void getProductSuperCat(String isVan) {
 
+        String user_id=Paper.book().read("unique_id");
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ApiLogin_Interface.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -107,10 +121,10 @@ public class Home_Sub_Sub_Category extends Fragment {
         Log.e("statuser",status+"");
 
         if (status != 0) {
-            service.PRODUCTS_SUB_SUB_CATEGORY_CALL(supercatid,isVan).enqueue(new Callback<ModelProductsSubSubCategory>() {
+            service.PRODUCTS_SUB_SUB_CATEGORY_CALL(user_id,supercatid,isVan).enqueue(new Callback<ModelProductsSubSubCategory>() {
                 @Override
                 public void onResponse(Call<ModelProductsSubSubCategory> call, Response<ModelProductsSubSubCategory> response) {
-
+                    Log.e("statuser22","response");
                     assert response.body() != null;
                     if (response.body().getStatusCode().equals(200)) {
 
@@ -127,7 +141,7 @@ public class Home_Sub_Sub_Category extends Fragment {
 
                 @Override
                 public void onFailure(Call<ModelProductsSubSubCategory> call, Throwable t) {
-
+                    Log.e("statuser22","failure");
                     Toast.makeText(mcontext, "No Product Found", Toast.LENGTH_SHORT).show();
                     t.printStackTrace();
                 }
@@ -136,10 +150,11 @@ public class Home_Sub_Sub_Category extends Fragment {
 
         else {
 
-            service.PRODUCT_DESCRIPTION_CALL(supercatid,cat,isVan).enqueue(new Callback<ModelDescription>() {
+            service.PRODUCT_DESCRIPTION_CALL(user_id,supercatid,cat,isVan).enqueue(new Callback<ModelDescription>() {
                 @Override
                 public void onResponse(Call<ModelDescription> call, Response<ModelDescription> response) {
 
+                    assert response.body() != null;
                     if (response.body().getStatusCode().equals(200)) {
 
                         productlist = (List<Product>) response.body().getProducts();
@@ -172,5 +187,17 @@ public class Home_Sub_Sub_Category extends Fragment {
         super.onAttach(c);
         mcontext=c;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Sub_Sub_Category");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
+
+
 
 }

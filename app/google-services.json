@@ -1,85 +1,40 @@
 {
   "project_info": {
-    "project_number": "591334989418",
-    "firebase_url": "https://notification-31c05.firebaseio.com",
-    "project_id": "notification-31c05",
-    "storage_bucket": "notification-31c05.appspot.com"
+    "project_number": "4017000559",
+    "project_id": "pick-my-order---ga4",
+    "storage_bucket": "pick-my-order---ga4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:591334989418:android:32f07253d3239587",
-        "android_client_info": {
-          "package_name": "com.example.scorpsoft"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "591334989418-6tbhfi6u4fk7flmagu8gl12ld8k73eh1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.scorpsoft",
-            "certificate_hash": "f05dc5093785a9ed1ff062b6e801ee9a28a6b290"
-          }
-        },
-        {
-          "client_id": "591334989418-moutsrl9kf4ndqa0k301s19ulibr3e2a.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBwSRf_f3BRCjuQ7qCpQc7Xlfia624QpEc"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "591334989418-moutsrl9kf4ndqa0k301s19ulibr3e2a.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "591334989418-qduqc5gf8veqp210gunpkau6o6fh4ln3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "harjeet.Atradeya"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:591334989418:android:e22fb9a50cd61f673ef413",
+        "mobilesdk_app_id": "1:4017000559:android:fbcc32779d72924f68fd9a",
         "android_client_info": {
           "package_name": "com.pickmyorder.asharani"
         }
       },
       "oauth_client": [
         {
-          "client_id": "591334989418-moutsrl9kf4ndqa0k301s19ulibr3e2a.apps.googleusercontent.com",
+          "client_id": "4017000559-b8gbeinu42eodb0mhtc1cprj7a3dvtsq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBwSRf_f3BRCjuQ7qCpQc7Xlfia624QpEc"
+          "current_key": "AIzaSyCy4APGQ1d1G6NElW3BBaXaO5_bh_4trEY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "591334989418-moutsrl9kf4ndqa0k301s19ulibr3e2a.apps.googleusercontent.com",
+              "client_id": "4017000559-b8gbeinu42eodb0mhtc1cprj7a3dvtsq.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "591334989418-qduqc5gf8veqp210gunpkau6o6fh4ln3.apps.googleusercontent.com",
+              "client_id": "4017000559-57kh2af0irakerl0cu4c9vq355h2dc15.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "harjeet.Atradeya"
+                "bundle_id": "com.ios.pickmyorder"
               }
             }
           ]

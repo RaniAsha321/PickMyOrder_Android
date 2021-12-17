@@ -55,7 +55,7 @@ public class Adapter_projects extends RecyclerView.Adapter<Adapter_projects.View
                 Paper.book().write("contact",projectDatalist.get(i).getContactNumber());
                 Paper.book().write("customer_nam",projectDatalist.get(i).getCustomer());
 
-                Intent intent= new Intent(mcontext,Project_details_already_added.class);
+                Intent intent= new Intent(mcontext, Project_details_already_added.class);
                 mcontext.startActivity(intent);
             }
         });
@@ -85,7 +85,7 @@ public class Adapter_projects extends RecyclerView.Adapter<Adapter_projects.View
                 Paper.book().write("customer_nam",projectDatalist.get(i).getCustomer());
                 Paper.book().write("alloted_engineers",projectDatalist.get(i).getAllotedEngineers());
 
-                Intent intent= new Intent(mcontext,Project_details_add_project.class);
+                Intent intent= new Intent(mcontext, Project_details_add_project.class);
                 mcontext.startActivity(intent);
                 Paper.book().write("layout_project_edit","1");
 
@@ -98,17 +98,7 @@ public class Adapter_projects extends RecyclerView.Adapter<Adapter_projects.View
 
 
             viewholder.layout_project_edit_bin.setVisibility(View.VISIBLE);
-           /* if(Paper.book().read("permission_wholeseller", "5").equals("1")) {
 
-                viewholder.layout_project_edit_bin.setVisibility(View.VISIBLE);
-            }
-
-            else {
-
-                viewholder.layout_project_edit_bin.setVisibility(View.GONE);
-
-            }
-*/
         }
 
         else {

@@ -1,14 +1,15 @@
 package com.pickmyorder.asharani;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -17,7 +18,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.paperdb.Paper;
@@ -35,6 +45,14 @@ public class Next_Login_Page extends AppCompatActivity {
     Button splashLogin;
     TextView user;
     Intent intentvalues;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    String business_validity;
+    final Handler handler = new Handler();
+    final int delay = 1000; // 1000 milliseconds == 1 second
+    long Todaymsecond;
+    com.pickmyorder.asharani.databaseSqlite databaseSqlite;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +64,7 @@ public class Next_Login_Page extends AppCompatActivity {
 
         /*********************************************** SETTING STATUS BAR WHITE ******************************************************************/
 
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
+        if (android.os .Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -55,8 +73,16 @@ public class Next_Login_Page extends AppCompatActivity {
 
         /***********************************************************End******************************************************************************/
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Welcome");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
 
         intentvalues = getIntent();
+        databaseSqlite = new databaseSqlite(getApplicationContext());
 
             SharedPreferences sharedPreferences =getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
             sharedPreferences.getString("role", "");
@@ -74,16 +100,17 @@ public class Next_Login_Page extends AppCompatActivity {
             String Wholeseller_engineer_id = sharedPreferences.getString("Wholeseller_engineer_id",null);
             final String user_id =sharedPreferences.getString("unique_id",null);
             String Image =  sharedPreferences.getString("Image",null);
+            business_validity =  sharedPreferences.getString("business_validity",null);
 
             sharedPreferences.getAll();
 
             Log.e("business_name",business_name+"");
             Paper.book().write("email", email);
-            Paper.book().write("business_name", business_name);
+
             Paper.book().write("username", values);
-            Paper.book().write("UserImage", Image);
-            Paper.book().write("userid", user_id);
-            Paper.book().write("Wholeseller_engineer_id", Wholeseller_engineer_id);
+
+           /* Paper.book().write("userid", user_id);*/
+            /*Paper.book().write("Wholeseller_engineer_id", Wholeseller_engineer_id);*/
             Paper.book().write("search_product","");
 
             user.setText(values);
@@ -104,6 +131,120 @@ public class Next_Login_Page extends AppCompatActivity {
                 }
             });
         }
+
+    private void Business_Validity_Check(String business_validity) {
+
+        if(business_validity != null && !business_validity.equals("")){
+
+            processCurrentTime(business_validity);
+
+        }
+    }
+
+    private void processCurrentTime(String business_validity) {
+
+        if (!isDataConnectionAvailable(Next_Login_Page.this)) {
+            showerrorDialog("No Network coverage!");
+        } else {
+
+            Log.e("datedd",business_validity+"");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            try {
+                Date mDate = sdf.parse(business_validity);
+                long timeInMilliseconds = mDate.getTime();
+
+                Log.e("timeInMilliseconds",timeInMilliseconds+"");
+                checkExpiry(timeInMilliseconds);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+
+
+        }
+    }
+
+    public static boolean isDataConnectionAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+        if (info == null)
+            return false;
+
+        return connectivityManager.getActiveNetworkInfo().isConnected();
+    }
+
+    private void checkExpiry(long timestampinMillies) {
+
+            Date What_Is_Today= Calendar.getInstance().getTime();
+
+            Log.e("Dated",What_Is_Today+"");
+            SimpleDateFormat Dateformat = new SimpleDateFormat("yyyy/MM/dd");
+            String Today=Dateformat.format(What_Is_Today);
+            Log.e("Dated2",Today+"");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            Date mDate = sdf.parse(Today);
+            Todaymsecond = mDate.getTime();
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Log.e("Dated3",timestampinMillies+"");
+        Log.e("Dated4",Todaymsecond+"");
+
+            if (timestampinMillies <= Todaymsecond) {
+                showerrorDialog("Validity of Trial Version has been Expired");
+            }
+
+    }
+
+    private void showerrorDialog(String data) {
+
+        final Dialog dialog= new Dialog(Next_Login_Page.this);
+        dialog.setContentView(R.layout.custom_dialog_trial);
+        dialog.show();
+        Button btn_continue = dialog.findViewById(R.id.btn_continue_trial);
+
+        btn_continue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(),Login.class);
+                startActivity(intent);
+
+                SharedPreferences pref = getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+
+                editor.clear();
+
+                editor.commit();
+
+                startActivity(intent);
+
+                databaseSqlite.deleteAll();
+
+                Paper.book().write("datarole","");
+                Paper.book().write("permission_see_cost","");
+                Paper.book().write("permission_cat","");
+                Paper.book().write("permission_orders","");
+                Paper.book().write("permission_pro_detailsss","");
+                Paper.book().write("permission_catelogues","");
+                Paper.book().write("permission_all_orders","");
+                Paper.book().write("permission_awaiting","");
+                Paper.book().write("deviceid","");
+                Paper .book().write("permission_wholeseller", "");
+                Paper.book().write("ViewWholesellerPage", "100");
+            }
+        });
+
+        dialog.setCancelable(false);
+    }
+
 
 
     @Override
@@ -189,7 +330,22 @@ public class Next_Login_Page extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Welcome");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
+        Business_Validity_Check(business_validity);
+
     }
+
+
+
+}
 
 
 

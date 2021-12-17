@@ -9,7 +9,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_150sdp"
+    android:layout_height="wrap_content"
     tools:context=".Specification_Tab"
     android:orientation="vertical">
 
@@ -27,6 +27,7 @@
 
     <TextView
 
+        android:layout_marginBottom="@dimen/_10sdp"
         android:textStyle="bold"
         android:fontFamily="@font/raleway_medium"
         android:textColor="#333e48"
@@ -37,8 +38,19 @@
         android:layout_height="wrap_content"
         android:text="Product Description" />
 
+        <WebView
+
+            android:background="@color/white"
+            android:id="@+id/web_desc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="WebViewLayout">
+
+        </WebView>
+
     <TextView
 
+        android:visibility="gone"
         android:id="@+id/fg_description"
         android:paddingRight="20dp"
         android:layout_marginBottom="20dp"
