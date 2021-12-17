@@ -21,7 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <LinearLayout
 
                 android:weightSum="9"
@@ -722,7 +721,10 @@
 
                         <EditText
 
-                            android:singleLine="true"                            android:imeOptions="actionDone"
+                            android:theme="@style/CustomEditTextTheme"
+                            android:textCursorDrawable="@drawable/color_cursor"
+                            android:singleLine="true"
+                            android:imeOptions="actionDone"
                             android:id="@+id/edtxt_del_ins"
                             android:gravity="center"
                             android:textColorHint="#333e48"

@@ -16,6 +16,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 import java.util.List;
 import io.paperdb.Paper;
@@ -24,6 +27,7 @@ import io.paperdb.Paper;
 public class Home_Categories extends Fragment {
 
     Home home;
+    private FirebaseAnalytics mFirebaseAnalytics;
     int i;
     Intent intent;
     List<Model_Home_Categories> mlist;
@@ -68,6 +72,13 @@ public class Home_Categories extends Fragment {
 
             }
         });
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Category");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
         home.nav_search_layout.setVisibility(View.VISIBLE);
 
@@ -127,6 +138,11 @@ public class Home_Categories extends Fragment {
     public void onResume() {
         super.onResume();
         setKeyListenerOnView(getView());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Home");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     public void onAttach (Activity activity) {
@@ -135,5 +151,6 @@ public class Home_Categories extends Fragment {
             home = (Home) activity;
         }
     }
+
 }
 

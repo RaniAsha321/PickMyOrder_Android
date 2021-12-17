@@ -87,7 +87,20 @@ public class ModelLogin {
     @SerializedName("vanstock")
     @Expose
     private String vanstock;
+    @SerializedName("business_validity")
+    @Expose
+    private String business_validity;
+    @SerializedName("Addtocart")
+    @Expose
+    private String Addtocart;
 
+    public String getBusiness_validity() {
+        return business_validity;
+    }
+
+    public void setBusiness_validity(String business_validity) {
+        this.business_validity = business_validity;
+    }
 
     public Integer getStatusCode() {
         return statusCode;
@@ -303,5 +316,13 @@ public class ModelLogin {
 
     public void setVanstock(String vanstock) {
         this.vanstock = vanstock;
+    }
+
+    public String getAddtocart() {
+        return Addtocart;
+    }
+
+    public void setAddtocart(String vanstock) {
+        this.Addtocart = Addtocart;
     }
 }

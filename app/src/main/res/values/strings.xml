@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Pick my order</string>
 
+    <string name="Apple">Apple</string>
+    <string name="Mango">Mango</string>
+    <string name="Orange">Orange</string>
+    <string name="Banana">Banana</string>
+
     <string name="your_string_here">Forgot Password? &lt;u>underline&lt;/u>.</string>
     <string name="title_activity_home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

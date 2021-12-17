@@ -841,6 +841,9 @@
 
                             <EditText
 
+                                android:theme="@style/CustomEditTextTheme"
+                                android:textColorHint="@color/themeblack"
+                                android:textCursorDrawable="@drawable/color_cursor"
                                 android:inputType="text"
                                 android:filterTouchesWhenObscured="false"
                                 android:id="@+id/edtxt_order_desc"

@@ -13,11 +13,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import io.paperdb.Paper;
 
 public class AccountDetails extends Fragment {
 
     ImageView  profile_pic;
+    private FirebaseAnalytics mFirebaseAnalytics;
     TextView username,email,change_password,txt_busniess_name;
     Home homeobj;
     LinearLayout layout_account_Business_name,layout_account_Default_Delivery_address,layout_account_billing_Details,
@@ -53,6 +56,15 @@ public class AccountDetails extends Fragment {
                 return false;
             }
         });
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Account");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
 
         /*************************************************************************************************************************************/
         layout_account_inner_delivery_details=view.findViewById(R.id.layout_account_inner_delivery_details);
@@ -139,7 +151,7 @@ public class AccountDetails extends Fragment {
             public void onClick(View v) {
 
                FragmentTransaction fragmentTransaction=getActivity().getSupportFragmentManager().beginTransaction().addToBackStack("account").replace(R.id.containerr,new ChangePass());
-                fragmentTransaction.commit();
+               fragmentTransaction.commit();
             }
         });
 
@@ -151,6 +163,17 @@ public class AccountDetails extends Fragment {
         if (activity.getClass() == Home.class) {
             homeobj = (Home) activity;
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Account");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
     }
 }

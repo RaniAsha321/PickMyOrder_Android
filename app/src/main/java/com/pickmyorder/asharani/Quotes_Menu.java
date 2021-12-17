@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.List;
 
 import io.paperdb.Paper;
@@ -26,7 +28,7 @@ public class Quotes_Menu extends Fragment {
     static TextView approve_size;
     LinearLayout layout_awaiting_orders, layout_all_orders, layout_order_btn;
     List<AwatingOrderDatum> dataorderlist;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,14 @@ public class Quotes_Menu extends Fragment {
                 layout_order_btn.setVisibility(View.VISIBLE);
             }
         }
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Quotes");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.orders_container, new Quotes());
         transaction.commit();
@@ -137,5 +147,16 @@ public class Quotes_Menu extends Fragment {
             home = (Home) activity;
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Quotes");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
+
 }
 

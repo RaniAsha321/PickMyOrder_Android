@@ -14,11 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.List;
 import io.paperdb.Paper;
 
 public class Orders_Menu extends Fragment {
 
+    private FirebaseAnalytics mFirebaseAnalytics;
     Adapter_Order_Awaiting dataa;
     Home home;
      TextView txt_Orders,txt_awaiting;
@@ -51,6 +54,13 @@ public class Orders_Menu extends Fragment {
         txt_awaiting.setTextColor(getResources().getColor(R.color.themeblack));
 
         home.nav_search_layout.setVisibility(View.VISIBLE);
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Orders");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
 
         if (Paper.book().read("datarole", "5").equals("4")) {
@@ -499,5 +509,16 @@ public class Orders_Menu extends Fragment {
             home = (Home) activity;
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Orders");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
+
 }
 

@@ -2,9 +2,9 @@ package com.pickmyorder.asharani;
 
 public class ModelStock {
 
-    String pro_id;
-    String reorder_qty;
-    String ordered_qty;
+    public String pro_id;
+    public String reorder_qty;
+    public String ordered_qty;
     String order_id;
 
     public static final String TABLE_NAME = "stock_table";

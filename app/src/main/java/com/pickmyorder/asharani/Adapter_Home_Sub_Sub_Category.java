@@ -15,6 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.List;
 import io.paperdb.Paper;
 
@@ -23,6 +26,7 @@ public class Adapter_Home_Sub_Sub_Category extends RecyclerView.Adapter<Adapter_
     Bundle bundle;
     Context mContext;
     List<SuperSubCategory> modellist_home;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public Adapter_Home_Sub_Sub_Category(List<SuperSubCategory> list, Context context) {
 
@@ -33,6 +37,11 @@ public class Adapter_Home_Sub_Sub_Category extends RecyclerView.Adapter<Adapter_
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_layout_home_sub_sub_category, viewGroup, false);
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
+
+
         return new ViewHolder(view);
     }
 
@@ -40,7 +49,7 @@ public class Adapter_Home_Sub_Sub_Category extends RecyclerView.Adapter<Adapter_
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
         viewHolder.product_name.setText(modellist_home.get(i).getSuperSubCatName());
-        Glide.with(mContext).load(modellist_home.get(i).getImage()).into(viewHolder.product_image);
+        Glide.with(mContext).load(modellist_home.get(i).getImage()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(viewHolder.product_image);
 
         if (modellist_home.get(i).getStatus()!=2) {
 
@@ -48,12 +57,21 @@ public class Adapter_Home_Sub_Sub_Category extends RecyclerView.Adapter<Adapter_
                 @Override
                 public void onClick(View v) {
 
+
+                    Bundle sub_sub_category = new Bundle();
+                    sub_sub_category.putString("sub_sub_category_id", modellist_home.get(i).getSuperSubCatId());
+                    sub_sub_category.putString("sub_sub_category_name", modellist_home.get(i).getSuperSubCatName());
+                    mFirebaseAnalytics.logEvent("Sub_Sub_Category", sub_sub_category);
+                    Paper.book().write("tempSuperCategory", modellist_home.get(i).getSuperSubCatId());
+
+                    Paper.book().write("superstatus", String.valueOf(modellist_home.get(i).getStatus()));
+
                     FragmentTransaction fragmentTransaction;
-                    fragmentTransaction = ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction().addToBackStack("m").replace(R.id.containerr, new Super_Home());
+                    fragmentTransaction = ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction().addToBackStack("m").replace(R.id.containerr, new Home_Sub_Sub_Sub_Category());
                     fragmentTransaction.commit();
 
-                    Paper.book().write("tempSuperCategory", modellist_home.get(i).getSuperSubCatId());
-                    Paper.book().write("superstatus", modellist_home.get(i).getStatus());
+                   // Paper.book().write("tempSuperCategory", modellist_home.get(i).getSuperSubCatId());
+                   /* Paper.book().write("superstatus", modellist_home.get(i).getStatus());*/
 
                 }
             });

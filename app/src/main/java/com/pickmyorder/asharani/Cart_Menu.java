@@ -20,11 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 import java.util.List;
 import io.paperdb.Paper;
 
-public class Cart_Menu extends Fragment implements MyInterface{
+public class Cart_Menu extends Fragment implements MyInterface {
 
     EditText add_product_description,add_product_quantity,add_product_price,add_product_product_code;
     LinearLayout layout_cart_menu,layout_add_product;
@@ -35,10 +37,11 @@ public class Cart_Menu extends Fragment implements MyInterface{
     LinearLayoutManager layoutManager;
     TextView final_price;
     Button Continue,btn_add_product,btn_close_cart_popup,btn_add_cart_popup;
-    private databaseSqlite databaseSqlite;
+    private com.pickmyorder.asharani.databaseSqlite databaseSqlite;
     Cart_Menu cart_menu;
     String userid,finalRWt;;
     FragmentTransaction fragmentTransaction;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,15 @@ public class Cart_Menu extends Fragment implements MyInterface{
         recyclerview.setLayoutManager(layoutManager);
 
         modelCartMenus=new ArrayList<>();
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Cart_Menu");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
 
 
 
@@ -378,6 +390,17 @@ public class Cart_Menu extends Fragment implements MyInterface{
     }
     @Override
     public void updateCart() {
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Cart_Menu");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
     }
 
 }

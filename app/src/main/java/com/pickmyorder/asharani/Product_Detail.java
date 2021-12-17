@@ -1,11 +1,15 @@
 package com.pickmyorder.asharani;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+
+
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -30,6 +34,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 import java.util.List;
 import io.paperdb.Paper;
@@ -39,6 +45,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
 import static android.content.Context.MODE_PRIVATE;
 import static com.pickmyorder.asharani.Login.MY_PREFS_NAME;
 
@@ -47,13 +54,14 @@ public class Product_Detail extends Fragment {
     PopupWindow popUp;
     List<String> variation_drop;
     ArrayList<Variation> variations;
-    LinearLayout variation,mainLayout,layout_close,layout_close_bottom,layout_product_stock;
+    LinearLayout variation,mainLayout,layout_close,layout_close_bottom,layout_product_stock,layout_second_image,pic_layout,layout_qty,layout_addCart,layout_withoutplan,layout_plan;
     ListView list;
     List<Variation> variationList;
     Spinner spinner;
     Home homesize;
     List<Model_Product_Description> mlist;
-    ImageView mainImage,first_image,second_image,Img_already_cart;
+    ImageView first_image,second_image,Img_already_cart;
+    ImageView mainImage;
     TabLayout tabLayout;
     ViewPager viewPager;
     List<Product> modelProductsCategories;
@@ -62,18 +70,20 @@ public class Product_Detail extends Fragment {
     Home home;
     List<ModelCartMenu> cartMenuList;
     EditText quantity;
-    TextView price,name,tv_drop,txtvw_product_stock,txtvw_outofStock;
+    TextView price,name,tv_drop,txtvw_product_stock,txtvw_outofStock,price_plan;
     int hasornot;
     Description_Tab description_tab;
     String userid,pro_id,selectedItemText,variation_name,variation_id,product_id,product_first_img,product_second_img, product_name,product_description,product_specification,product_reviews,product_price,product_inc_vat;
     private databaseSqlite db;
-    String vanstock,in_stock;
+    String vanstock,in_stock,permission_Addtocart;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,9 +96,11 @@ public class Product_Detail extends Fragment {
         mainImage=view.findViewById(R.id.main_image);
         first_image=view.findViewById(R.id.image_one);
         second_image=view.findViewById(R.id.image_two);
+        layout_second_image = view.findViewById(R.id.layout_second_image);
         tabLayout = view.findViewById(R.id.tablayout);
         viewPager = view.findViewById(R.id.viewpagerr);
         price=view.findViewById(R.id.price);
+        price_plan = view.findViewById(R.id.price_plan);
         name=view.findViewById(R.id.pro_name);
         number_of_items=view.findViewById(R.id.number_item);
         btn_cart=view.findViewById(R.id.btn_cart);
@@ -101,7 +113,20 @@ public class Product_Detail extends Fragment {
         txtvw_product_stock =view.findViewById(R.id.txtvw_product_stock);
         layout_product_stock =view.findViewById(R.id.layout_product_stock);
         txtvw_outofStock = view.findViewById(R.id.txtvw_outofStock);
+        pic_layout = view.findViewById(R.id.playground);
+        layout_qty = view.findViewById(R.id.layout_qty);
+        layout_addCart = view.findViewById(R.id.layout_addCart);
+        layout_plan = view.findViewById(R.id.layout_plan);
+        layout_withoutplan = view.findViewById(R.id.layout_withoutplan);
 
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Product_Description");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
         description_tab=new Description_Tab();
 
@@ -128,17 +153,40 @@ public class Product_Detail extends Fragment {
         });
 
 
+        mainImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Intent intent = new Intent(getActivity(), Product_Zoom_Image.class);
+                startActivity(intent);
+            }
+        });
+
+        permission_Addtocart = Paper.book().read("permission_Addtocart");
+
+        if((permission_Addtocart != null) && (permission_Addtocart.equals("1"))){
+
+            layout_withoutplan.setVisibility(View.VISIBLE);
+            layout_plan.setVisibility(View.GONE);
+
+        }
+        else {
+
+            layout_withoutplan.setVisibility(View.GONE);
+            layout_plan.setVisibility(View.VISIBLE);
+
+        }
+
 
 
         if (vanstock != null && vanstock.equals("1")){
-
 
             if (in_stock != null && Integer.valueOf(in_stock) < 1 ){
 
                 btn_cart.setVisibility(View.GONE);
                 txtvw_outofStock.setVisibility(View.VISIBLE);
                 layout_product_stock.setVisibility(View.GONE);
-
 
             }
             else {
@@ -149,16 +197,11 @@ public class Product_Detail extends Fragment {
                 txtvw_product_stock.setText(in_stock);
             }
 
-
-
-
         }
         else {
 
             layout_product_stock.setVisibility(View.GONE);
         }
-
-
 
 
 
@@ -207,11 +250,13 @@ public class Product_Detail extends Fragment {
 
                 if(Paper.book().read("permission_see_cost","2").equals("1")){
                     price.setText(product_price);
+                    price_plan.setText(product_price);
                 }
 
                 else {
 
                     price.setText("0.00");
+                    price_plan.setText("0.00");
 
                 }
 
@@ -224,11 +269,13 @@ public class Product_Detail extends Fragment {
 
                     if(Paper.book().read("permission_see_cost","2").equals("1")) {
                         price.setText(product_price);
+                        price_plan.setText(product_price);
                     }
 
                     else {
 
                         price.setText("0.00");
+                        price_plan.setText("0.00");
 
                     }
 
@@ -242,6 +289,7 @@ public class Product_Detail extends Fragment {
 
                     if(Paper.book().read("permission_see_cost","2").equals("1")){
                         price.setText(variations.get(position).getPrice());
+                        price_plan.setText(variations.get(position).getPrice());
 
                         Paper.book().write("product_description",variations.get(position).getDescription());
 
@@ -250,6 +298,7 @@ public class Product_Detail extends Fragment {
                     else {
 
                         price.setText("0.00");
+                        price_plan.setText("0.00");
 
                     }
 
@@ -333,6 +382,7 @@ public class Product_Detail extends Fragment {
                 TextView tv = (TextView) view.findViewById(R.id.textview_drop);
 
                 if(Paper.book().read("permission_see_cost","2").equals("1")){
+
                     price.setText(product_price);
                 }
 
@@ -345,6 +395,7 @@ public class Product_Detail extends Fragment {
                 if(Paper.book().read("permission_wholeseller", "5").equals("1")) {
 
                     price.setText(product_price);
+                    price_plan.setText(product_price);
 
                 }
 
@@ -360,6 +411,7 @@ public class Product_Detail extends Fragment {
                     if(Paper.book().read("permission_see_cost","2").equals("1")) {
 
                         price.setText(variations.get(position).getPrice());
+                        price_plan.setText(variations.get(position).getPrice());
                     }
 
                     else  if(Paper.book().read("datarole", "5").equals("4")){
@@ -367,6 +419,7 @@ public class Product_Detail extends Fragment {
                         if(Paper.book().read("permission_wholeseller", "5").equals("1")) {
 
                             price.setText(variations.get(position).getPrice());
+                            price_plan.setText(variations.get(position).getPrice());
 
                         }
 
@@ -375,6 +428,7 @@ public class Product_Detail extends Fragment {
                     else {
 
                         price.setText("0.00");
+                        price_plan.setText("0.00");
 
                     }
 
@@ -396,6 +450,7 @@ public class Product_Detail extends Fragment {
 
                     if(Paper.book().read("permission_see_cost","2").equals("1")){
                         price.setText(variations.get(position).getPrice());
+                        price_plan.setText(variations.get(position).getPrice());
 
                         Paper.book().write("product_description",variations.get(position).getDescription());
 
@@ -407,6 +462,7 @@ public class Product_Detail extends Fragment {
                         if(Paper.book().read("permission_wholeseller", "5").equals("1")) {
 
                             price.setText(variations.get(position).getPrice());
+                            price_plan.setText(variations.get(position).getPrice());
 
                             Paper.book().write("product_description",variations.get(position).getDescription());
 
@@ -417,6 +473,7 @@ public class Product_Detail extends Fragment {
                     else {
 
                         price.setText("0.00");
+                        price_plan.setText("0.00");
 
                     }
 
@@ -542,7 +599,7 @@ public class Product_Detail extends Fragment {
                 @Override
                 public void onFailure(Call<ModelVariations> call, Throwable t) {
 
-                    Toast.makeText(getActivity(), "Server Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
                     t.printStackTrace();
                 }
             });
@@ -557,6 +614,11 @@ public class Product_Detail extends Fragment {
         product_reviews= Paper.book().read("product_pdf_info");
         product_specification= Paper.book().read("product_specification");
         product_price=Paper.book().read("product_price");
+
+        Bundle products = new Bundle();
+        products.putString("product_id", product_id);
+        products.putString("product_name", product_name);
+        mFirebaseAnalytics.logEvent("Product", products);
 
         if(!product_first_img.equals("")){
 
@@ -575,14 +637,18 @@ public class Product_Detail extends Fragment {
 
         else {
 
-            second_image.setVisibility(View.GONE);
+            layout_second_image.setVisibility(View.GONE);
         }
 
         Glide.with(getActivity()).load(product_first_img).into(mainImage);
 
+        Paper.book().write("zoomImage",product_first_img);
+
         first_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Paper.book().write("zoomImage",product_first_img);
                 Glide.with(getActivity()).load(product_first_img).into(mainImage);
 
             }
@@ -590,6 +656,8 @@ public class Product_Detail extends Fragment {
         second_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Paper.book().write("zoomImage",product_second_img);
                 Glide.with(getActivity()).load(product_second_img).into(mainImage);
 
             }
@@ -597,17 +665,20 @@ public class Product_Detail extends Fragment {
 
         if(Paper.book().read("permission_see_cost","2").equals("1")){
             price.setText(product_price);
+            price_plan.setText(product_price);
         }
 
         else {
 
             price.setText("0.00");
+            price_plan.setText("0.00");
 
         }
 
         if(Paper.book().read("permission_wholeseller", "5").equals("1")) {
 
             price.setText(product_price);
+            price_plan.setText(product_price);
 
         }
 
@@ -651,12 +722,6 @@ public class Product_Detail extends Fragment {
                         String whichbusiness_2=Paper.book().read("whichbusiness");
                         String wholeseller_bus_id=Paper.book().read("wholeseller_bus_id");
 
-                        Log.e("sumandeep1",wholeseller_bus_id+"");
-                        Log.e("sumandeep2",business_id_2+"");
-                        Log.e("sumandeep3",whichbusiness_2+"");
-                        Log.e("sumandeep4",publish_key+"");
-
-
                         if((business_id_2.equals(whichbusiness_2))){
 
                             Paper.book().write("stripe_publish_key","0");
@@ -676,14 +741,6 @@ public class Product_Detail extends Fragment {
                                 Paper.book().write("save_business",wholeseller_bus_id);                        }
 
                         }
-
-                  /*  SharedPreferences pref = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = pref.edit();
-
-                    editor.putString("stripe_publish_key",publish_key);
-
-                    editor.apply();*/
-
 
                         homesize.cart_size.setVisibility(View.VISIBLE);
                         product_price=Paper.book().read("product_price");
@@ -2137,13 +2194,7 @@ public class Product_Detail extends Fragment {
                     quantity.setText("");
                     quantity.setFocusable(false);
                     homesize.search_txtvw.setFocusable(false);
-
                 }
-
-
-
-
-
 
             }
         });
@@ -2157,5 +2208,17 @@ public class Product_Detail extends Fragment {
 
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Product_Description");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
+
+
 }
 

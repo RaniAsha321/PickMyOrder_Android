@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,6 +26,7 @@ public class Billing_Details extends Fragment  {
 
     TextView txt_billing_company_postcode,txt_billing_company_city,txt_billing_company_address,txt_billing_company_name
             ,txt_billing_address;
+    private FirebaseAnalytics mFirebaseAnalytics;
     Home homeobj;
 
     @Override
@@ -58,6 +62,15 @@ public class Billing_Details extends Fragment  {
                 return false;
             }
         });
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Billing_Details");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
 
         /*************************************************************************************************************************************/
 
@@ -117,6 +130,17 @@ public class Billing_Details extends Fragment  {
         if (activity.getClass() == Home.class) {
             homeobj = (Home) activity;
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Billing_Details");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
     }
 }

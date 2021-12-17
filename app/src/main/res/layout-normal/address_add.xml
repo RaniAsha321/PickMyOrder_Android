@@ -104,6 +104,8 @@
 
             <EditText
 
+                android:theme="@style/CustomEditTextTheme"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:id="@+id/project_names_ad"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -164,6 +166,8 @@
 
             <EditText
 
+                android:theme="@style/CustomEditTextTheme"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:id="@+id/customer_name_add"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -224,6 +228,8 @@
 
             <EditText
 
+                android:theme="@style/CustomEditTextTheme"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:id="@+id/address_add"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -284,6 +290,8 @@
 
             <EditText
 
+                android:theme="@style/CustomEditTextTheme"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:id="@+id/city_add"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -343,6 +351,8 @@
 
             <EditText
 
+                android:theme="@style/CustomEditTextTheme"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:id="@+id/post_code_add"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -402,6 +412,8 @@
 
             <EditText
 
+                android:theme="@style/CustomEditTextTheme"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:id="@+id/delivery_address_add"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -460,6 +472,8 @@
 
                 <EditText
 
+                    android:theme="@style/CustomEditTextTheme"
+                    android:textCursorDrawable="@drawable/color_cursor"
                     android:id="@+id/delivery_city_add"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -518,6 +532,8 @@
 
                 <EditText
 
+                    android:theme="@style/CustomEditTextTheme"
+                    android:textCursorDrawable="@drawable/color_cursor"
                     android:id="@+id/delivery_post_code_add"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -577,6 +593,8 @@
 
                 <EditText
 
+                    android:theme="@style/CustomEditTextTheme"
+                    android:textCursorDrawable="@drawable/color_cursor"
                     android:id="@+id/contact_add"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -635,6 +653,8 @@
 
                 <EditText
 
+                    android:theme="@style/CustomEditTextTheme"
+                    android:textCursorDrawable="@drawable/color_cursor"
                     android:id="@+id/project_email_add"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

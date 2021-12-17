@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.Locale;
 
 import io.paperdb.Paper;
@@ -20,7 +22,7 @@ public class Pdf_indo_Tab extends Fragment {
     TextView pdf1,pdf2,pdf3,pdf4,pdf5,pdf6;
     LinearLayout pdf_lay1,pdf_lay2,pdf_lay3,pdf_lay4,pdf_lay5,pdf_lay6;
 
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     String pdf11,pdf22,pdf33,pdf44,pdf55,pdf66,title1,title2,title3,title4,title5,title6;
 
     @Override
@@ -34,6 +36,14 @@ public class Pdf_indo_Tab extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_pdf_info__tab, container, false);
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Product_Pdf's_Screen");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
         pdf_lay1=view.findViewById(R.id.pdf_lay1);
         pdf_lay2=view.findViewById(R.id.pdf_lay2);
@@ -134,6 +144,11 @@ public class Pdf_indo_Tab extends Fragment {
             @Override
             public void onClick(View v) {
 
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, title1);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Product_Pdf");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
                 pdf1.setTextColor(getResources().getColor(R.color.bluetheme));
                 pdf2.setTextColor(getResources().getColor(R.color.themeblack));
                 pdf3.setTextColor(getResources().getColor(R.color.themeblack));
@@ -152,6 +167,11 @@ public class Pdf_indo_Tab extends Fragment {
         pdf2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, title2);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Product_Pdf");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
                 pdf1.setTextColor(getResources().getColor(R.color.themeblack));
                 pdf2.setTextColor(getResources().getColor(R.color.bluetheme));
@@ -173,6 +193,12 @@ public class Pdf_indo_Tab extends Fragment {
             @Override
             public void onClick(View v) {
 
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, title3);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Product_Pdf");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
+
                 pdf3.setTextColor(getResources().getColor(R.color.bluetheme));
                 pdf1.setTextColor(getResources().getColor(R.color.themeblack));
                 pdf2.setTextColor(getResources().getColor(R.color.themeblack));
@@ -191,6 +217,11 @@ public class Pdf_indo_Tab extends Fragment {
         pdf4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, title4);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Product_Pdf");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
 
                 pdf4.setTextColor(getResources().getColor(R.color.bluetheme));
                 pdf3.setTextColor(getResources().getColor(R.color.themeblack));
@@ -212,6 +243,12 @@ public class Pdf_indo_Tab extends Fragment {
             @Override
             public void onClick(View v) {
 
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, title5);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Product_Pdf");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
+
                 pdf5.setTextColor(getResources().getColor(R.color.bluetheme));
                 pdf3.setTextColor(getResources().getColor(R.color.themeblack));
                 pdf1.setTextColor(getResources().getColor(R.color.themeblack));
@@ -231,6 +268,12 @@ public class Pdf_indo_Tab extends Fragment {
             @Override
             public void onClick(View v) {
 
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, title6);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Product_Pdf");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
+
                 pdf6.setTextColor(getResources().getColor(R.color.bluetheme));
                 pdf3.setTextColor(getResources().getColor(R.color.themeblack));
                 pdf1.setTextColor(getResources().getColor(R.color.themeblack));
@@ -249,6 +292,15 @@ public class Pdf_indo_Tab extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Product_Pdf's_Screen");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
 
 
 

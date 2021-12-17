@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class SubCategory {
 
-
     @SerializedName("status")
     @Expose
     private Integer status;

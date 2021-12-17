@@ -28,7 +28,7 @@ public class Adapter_Quote_Supplier extends RecyclerView.Adapter<Adapter_Quote_S
     List<String> selectedIds= new ArrayList<>();
     Dialog dialog;
 
-    public Adapter_Quote_Supplier(Context applicationContext, List<SupplierDatum> myupdate, Dialog dialog) {
+    public  Adapter_Quote_Supplier(Context applicationContext, List<SupplierDatum> myupdate, Dialog dialog) {
 
         this.mycontext = applicationContext;
         this.myupdatelist = myupdate;
@@ -46,7 +46,7 @@ public class Adapter_Quote_Supplier extends RecyclerView.Adapter<Adapter_Quote_S
     public void onBindViewHolder(@NonNull Adapter_Quote_Supplier.ViewHolder viewHolder, int i) {
 
        // myupdatelist.remove(0);
-
+      //  String[] separated = (myupdatelist.get(i).getSuppliersName()).split("\\[");
 
         viewHolder.checkboxlist.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -55,24 +55,29 @@ public class Adapter_Quote_Supplier extends RecyclerView.Adapter<Adapter_Quote_S
                 if (isChecked) {
 
                     if((Paper.book().read("uncheck",new ArrayList<String>()))!=null){
-
+                        Log.e("selected_data","1");
                         selectedStrings.add(myupdatelist.get(i).getSuppliersName());
                         selectedIds.add(myupdatelist.get(i).getId());
+                        viewHolder.object2.tv_drop_supplier.setText((selectedStrings.toString()).replaceFirst("\\[", "").replaceAll("\\]", ""));
+
+                      //  Log.e("selected77",selectedStrings.toString()+"");
+                     //   Log.e("selected77",(selectedIds.toString()).replaceFirst("\\[", "").replaceAll("\\]", "")+"");
+
+
+
                         Paper.book().write("check",selectedStrings.toString());
                         Paper.book().write("checked",selectedStrings.size());
-                        Paper.book().write("supplier_id",selectedIds.toString() );
+                        Paper.book().write("supplier_id",(selectedIds.toString()).replaceFirst("\\[", "").replaceAll("\\]", ""));
 
                     }
 
                     else {
-
+                        Log.e("selected_data","2");
                         Paper.book().write("check","");
                     }
 
-                    Log.e("selected",selectedStrings.toString()+"");
-                    Log.e("selected",selectedIds.toString()+"");
-
-
+                 //   Log.e("selected",selectedStrings.toString()+"");
+                    Log.e("selected",(selectedIds.toString()).replaceFirst("\\[", "").replaceAll("\\]", "")+"");
 
 
                 }
@@ -80,21 +85,26 @@ public class Adapter_Quote_Supplier extends RecyclerView.Adapter<Adapter_Quote_S
                 else{
 
                     selectedStrings.remove(myupdatelist.get(i).getSuppliersName());
+                    selectedIds.remove(myupdatelist.get(i).getId());
 
                     if(selectedStrings.size()!=0){
                         viewHolder.object2.tv_drop_supplier.setText((selectedStrings.toString()).replaceFirst("\\[", "").replaceAll("\\]", ""));
-                        Paper.book().write("check","");
-                        Paper.book().write("checked",selectedStrings.size());
+                        Paper.book().write("check",selectedStrings.toString());
+
                     }
 
                     else {
 
                         dialog.show();
-                        Paper.book().write("checked",selectedStrings.size());
+
                     }
 
-                    Log.e("selected1",selectedStrings.toString()+"");
-                    Log.e("selected1",selectedStrings.size()+"");
+                    Paper.book().write("checked",selectedStrings.size());
+                    Paper.book().write("supplier_id",(selectedIds.toString()).replaceFirst("\\[", "").replaceAll("\\]", ""));
+
+                  //  Log.e("selected1",selectedStrings.toString()+"");
+                   // Log.e("selected_Size_else",selectedStrings.size()+"");
+                    Log.e("selected1",(selectedIds.toString()).replaceFirst("\\[", "").replaceAll("\\]", "")+"");
 
 
 
@@ -111,15 +121,23 @@ public class Adapter_Quote_Supplier extends RecyclerView.Adapter<Adapter_Quote_S
             public void onClick(View v) {
 
                 int checked=Paper.book().read("checked");
+                String str = Paper.book().read("check");
+                String id = Paper.book().read("supplier_id");
+               // Log.e("checked12",str+"");
+                Log.e("checked123",id+"");
+
+               // Log.e("checked1",checked+"");
+                Log.e("checked_Size_else",checked+"");
 
                 if ((checked!=0)){
                     if (!(Paper.book().read("check").equals(""))) {
 
                         viewHolder.checkboxlist.setChecked(true);
-                        String str = (Paper.book().read("check"));
+
                         viewHolder.object2.tv_drop_supplier.setText(str.replaceFirst("\\[", "").replaceAll("\\]", ""));
+                        Paper.book().write("check",str.replaceFirst("\\[", "").replaceFirst("\\]", ""));
                         Paper.book().write("finalString", str.replaceFirst("\\[", "").replaceFirst("\\]", ""));
-                        Paper.book().write("supplier_id",selectedIds.toString().replaceFirst("\\[", "").replaceFirst("\\]", "") );
+                        Paper.book().write("supplier_id",id.toString().replaceFirst("\\[", "").replaceFirst("\\]", "") );
                     }
 
                     dialog.dismiss();
@@ -130,6 +148,9 @@ public class Adapter_Quote_Supplier extends RecyclerView.Adapter<Adapter_Quote_S
                     Toast.makeText(mycontext, "Select AtLeast 1 Engineer", Toast.LENGTH_SHORT).show();
 
                 }
+
+             //   Log.e("selected2",selectedStrings.toString()+"");
+               // Log.e("selected2",selectedIds.toString()+"");
             }
         });
 

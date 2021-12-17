@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 import java.util.List;
 import io.paperdb.Paper;
@@ -28,6 +31,7 @@ public class Awaiting extends Fragment {
     List<AwatingOrderDatum> dataorderlist;
     List<AwatingOrderDatum> myorderlist;
     Adapter_Order_Awaiting myadapter;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,15 @@ public class Awaiting extends Fragment {
         myorderlist=new ArrayList<>();
 
         app_size=new Orders_Menu();
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Awaiting");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
 
         AwaitingMenu();
 
@@ -150,6 +163,17 @@ public class Awaiting extends Fragment {
         if (activity.getClass() == Home.class) {
             homesize = (Home) activity;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Awaiting");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, getClass().getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+
     }
 
 }

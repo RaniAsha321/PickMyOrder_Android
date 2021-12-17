@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+
+    android:background="@color/white"
+    android:layout_gravity="bottom"
+    android:weightSum="4"
+    android:orientation="vertical"
+    android:layout_marginLeft="@dimen/_10sdp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_300sdp"
+    android:layout_height="@dimen/_300sdp"
+    >
+
+        <LinearLayout
+
+            android:weightSum="2"
+            android:orientation="vertical"
+            android:layout_weight="0.8"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+                <LinearLayout
+
+                    android:gravity="center"
+                    android:layout_weight="0.8"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+
+                        android:layout_gravity="center"
+                        android:background="@drawable/trial_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </ImageView>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:orientation="vertical"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:layout_weight="1.2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_medium"
+                        android:gravity="center"
+                        android:text="Your Free Trial Has Expired"
+                        android:textColor="@color/themeblack"
+                        android:textSize="@dimen/_17sdp"
+                        android:textStyle="bold" />
+
+              <TextView
+
+                  android:textColor="@color/dropgrey"
+                  android:fontFamily="@font/roboto_medium"
+                  android:textSize="@dimen/_11sdp"
+                  android:gravity="center"
+                  android:text="Thankyou for trying Pick My Order , we let you know that your 14 days free trial has expired"
+                  android:layout_width="wrap_content"
+                  android:layout_height="match_parent"/>
+
+                </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:orientation="vertical"
+            android:weightSum="2"
+            android:layout_weight="3.2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+                <LinearLayout
+
+
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                        <Button
+
+                            android:id="@+id/btn_continue_trial"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/_13sdp"
+                            android:textColor="@color/white"
+                            android:text="CONTINUE TO LOGIN"
+                            android:background="@drawable/shape_rounded_green"
+                            android:layout_width="@dimen/_220sdp"
+                            android:layout_height="@dimen/_35sdp" />
+
+                </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+
+</LinearLayout>

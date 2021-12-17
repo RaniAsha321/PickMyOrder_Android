@@ -4,6 +4,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.pickmyorder.asharani.Description_Tab;
+import com.pickmyorder.asharani.Pdf_indo_Tab;
+import com.pickmyorder.asharani.Specification_Tab;
+
 public class Adapter_Viewpager extends FragmentStatePagerAdapter {
 
     int tabcount;

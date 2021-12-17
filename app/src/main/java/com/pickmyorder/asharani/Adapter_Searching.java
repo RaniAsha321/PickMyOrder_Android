@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class Adapter_Searching extends RecyclerView.Adapter<Adapter_Searching.Vi
     Context mcontext;
     List<SearchDatum> searchlist;
     String publishkey;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public Adapter_Searching(Context context, List<SearchDatum> mylist, String publishkey) {
 
@@ -42,11 +46,16 @@ public class Adapter_Searching extends RecyclerView.Adapter<Adapter_Searching.Vi
     public Adapter_Searching.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_layout_searching, viewGroup, false);
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mcontext);
+
+
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Adapter_Searching.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
         if(Paper.book().read("permission_see_cost","2").equals("1")){
             viewHolder.txt_price.setText( searchlist.get(i).getExVat());
@@ -70,8 +79,6 @@ public class Adapter_Searching extends RecyclerView.Adapter<Adapter_Searching.Vi
                 Log.e("search_out1","if if");
                 viewHolder.layout_van_qnty.setVisibility(View.GONE);
                 viewHolder.txtvw_search_out.setVisibility(View.VISIBLE);
-
-
 
             }
             else {
@@ -103,11 +110,18 @@ public class Adapter_Searching extends RecyclerView.Adapter<Adapter_Searching.Vi
 
 
         viewHolder.txt_searching.setText(searchlist.get(i).getTitle());
-        Glide.with(mcontext).load(searchlist.get(i).getProductsImages()).into(viewHolder.imageView_searching);
+
+        Glide.with(mcontext).load(searchlist.get(i).getProductsImages()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(viewHolder.imageView_searching);
 
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                Bundle search = new Bundle();
+                search.putString(FirebaseAnalytics.Param.ITEM_NAME, searchlist.get(i).getTitle());
+                search.putString(FirebaseAnalytics.Param.ITEM_ID, searchlist.get(i).getId());
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_SEARCH_RESULTS, search);
 
                 FragmentTransaction fragmentTransaction ;
                 fragmentTransaction = ((AppCompatActivity) mcontext).getSupportFragmentManager().beginTransaction().addToBackStack("mo").replace(R.id.containerr, new Product_Detail());

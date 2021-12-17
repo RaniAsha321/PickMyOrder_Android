@@ -48,6 +48,7 @@
 
                     <LinearLayout
 
+                        android:id="@+id/playground"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="0.8"
@@ -57,11 +58,16 @@
 
                         <ImageView
 
-                            android:layout_margin="@dimen/_3sdp"
+                            android:layout_marginRight="@dimen/_60sdp"
+                            android:layout_marginLeft="@dimen/_60sdp"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:layout_marginBottom="@dimen/_8sdp"
                             android:id="@+id/main_image"
-                            android:layout_width="@dimen/_240sdp"
-                            android:scaleType="fitXY"
-                            android:layout_height="@dimen/_220sdp" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+
+                        </ImageView>
 
                     </LinearLayout>
 
@@ -80,32 +86,50 @@
                             android:layout_height="match_parent">
 
 
-                            <ImageView
-
-                                android:padding="@dimen/_5sdp"
-                                android:background="@drawable/shape_rectangle_black"
-                                android:id="@+id/image_one"
-                                android:layout_width="@dimen/_65sdp"
-                                android:layout_height="@dimen/_65sdp"
-                                android:layout_gravity="center"
-                                android:layout_marginLeft="@dimen/_15sdp"
-                                android:scaleType="fitXY"
-
-                                />
-
-                            <ImageView
+                            <LinearLayout
 
                                 android:layout_marginLeft="@dimen/_5sdp"
+                                android:gravity="center_horizontal"
+                                android:padding="@dimen/_2sdp"
                                 android:background="@drawable/shape_rectangle_black"
-                                android:id="@+id/image_two"
                                 android:layout_width="@dimen/_65sdp"
-                                android:layout_height="@dimen/_65sdp"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="10dp"
-                                android:scaleType="fitXY"
-                                android:padding="@dimen/_5sdp"
+                                android:layout_height="@dimen/_65sdp">
 
-                                />
+                                <ImageView
+
+                                    android:layout_margin="@dimen/_2sdp"
+                                    android:layout_gravity="center"
+                                    android:id="@+id/image_one"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+
+                                    />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+
+                                android:id="@+id/layout_second_image"
+                                android:layout_marginLeft="@dimen/_10sdp"
+                                android:gravity="center_horizontal"
+                                android:padding="@dimen/_2sdp"
+                                android:background="@drawable/shape_rectangle_black"
+                                android:layout_width="@dimen/_65sdp"
+                                android:layout_height="@dimen/_65sdp">
+
+                                <ImageView
+
+                                    android:layout_margin="@dimen/_2sdp"
+                                    android:layout_gravity="center"
+                                    android:id="@+id/image_two"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+
+                                    />
+
+
+                            </LinearLayout>
 
 
                         </LinearLayout>
@@ -185,6 +209,7 @@
 
             </LinearLayout>
 
+
             <LinearLayout
 
                 android:layout_width="match_parent"
@@ -203,9 +228,9 @@
 
                     <LinearLayout
 
-                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -215,28 +240,27 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
 
-                                <TextView
+                                    <TextView
 
-                                    android:inputType="textMultiLine"
-                                    android:id="@+id/pro_name"
-                                    android:layout_width="@dimen/_270sdp"
-                                    android:layout_height="match_parent"
-                                    android:background="#ffffff"
-                                    android:fontFamily="@font/raleway_medium"
-                                    android:gravity="center_vertical"
-                                    android:paddingLeft="10dp"
-                                    android:text="Product Full Name 5L  fklddlkdldmvflvflvvll"
-                                    android:textColor="#333e48"
-                                    android:textSize="@dimen/_16sdp" />
+                                        android:id="@+id/pro_name"
+                                        android:layout_width="@dimen/_270sdp"
+                                        android:layout_height="match_parent"
+                                        android:background="#ffffff"
+                                        android:fontFamily="@font/raleway_medium"
+                                        android:gravity="center_vertical"
+                                        android:inputType="textMultiLine"
+                                        android:paddingLeft="10dp"
+                                        android:text="Product Full Name 5L  fklddlkdldmvflvflvvll"
+                                        android:textColor="#333e48"
+                                        android:textSize="@dimen/_16sdp" />
 
-                            </LinearLayout>
+                                </LinearLayout>
 
                             </ScrollView>
-
 
 
                         </LinearLayout>
@@ -244,10 +268,10 @@
                         <ImageView
 
                             android:id="@+id/Img_already"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_gravity="center"
                             android:layout_width="15dp"
-                            android:layout_height="15dp" />
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="@dimen/_10sdp" />
 
                     </LinearLayout>
 
@@ -269,18 +293,18 @@
                 <LinearLayout
 
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_200sdp"
+                    android:layout_height="@dimen/_220sdp"
                     android:layout_gravity="center"
                     android:background="#f7f7f7"
                     android:gravity="center_horizontal">
 
                     <LinearLayout
 
-                        android:weightSum="6"
                         android:layout_width="@dimen/_300sdp"
                         android:layout_height="match_parent"
                         android:background="#ffffff"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:weightSum="6">
 
                         <com.google.android.material.tabs.TabLayout
 
@@ -327,10 +351,47 @@
 
             </LinearLayout>
 
+            <LinearLayout
 
+                android:visibility="gone"
+                android:id="@+id/layout_plan"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp">
+
+
+                <ImageView
+
+                    android:layout_weight="2.4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/pound_black" />
+
+                <TextView
+
+
+                    android:textStyle="bold"
+                    android:layout_weight="0.6"
+                    android:id="@+id/price_plan"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center_vertical"
+                    android:text=" Price"
+                    android:textColor="#333e48"
+                    android:textSize="@dimen/_16sdp" />
+
+
+            </LinearLayout>
 
             <LinearLayout
 
+                android:id="@+id/layout_withoutplan"
                 android:weightSum="2"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -348,6 +409,7 @@
 
                     <LinearLayout
 
+                        android:id="@+id/layout_qty"
                         android:layout_width="@dimen/_100sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -356,6 +418,9 @@
 
                         <EditText
 
+                            android:theme="@style/CustomEditTextTheme"
+                            android:textColorHint="@color/themeblack"
+                            android:textCursorDrawable="@drawable/color_cursor"
                             android:inputType="number"
                             android:id="@+id/number_item"
                             android:layout_width="match_parent"
@@ -387,7 +452,7 @@
                         <ImageView
 
                             android:layout_weight="2.4"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="@dimen/_14sdp"
                             android:layout_gravity="center"
                             android:background="@drawable/pound_black" />
@@ -416,6 +481,7 @@
 
                 <LinearLayout
 
+                    android:id="@+id/layout_addCart"
                     android:gravity="top"
                     android:weightSum="2"
                     android:orientation="vertical"

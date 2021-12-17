@@ -10,6 +10,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,9 @@ import com.budiyev.android.imageloader.ImageLoader;
 import com.budiyev.android.imageloader.ImageUtils;
 import com.budiyev.android.imageloader.LoadCallback;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.List;
 import io.paperdb.Paper;
 
@@ -28,6 +33,8 @@ public class Adapter_Home_Categories extends RecyclerView.Adapter<Adapter_Home_C
 
     private Context mContext;
     private List<Model_Home_Categories> modellist_home;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
 
     public Adapter_Home_Categories(List<Model_Home_Categories> modelHomeCategories, Context mContext) {
 
@@ -40,6 +47,11 @@ public class Adapter_Home_Categories extends RecyclerView.Adapter<Adapter_Home_C
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rowlayout_home_categories, viewGroup, false);
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
+
+
         return new ViewHolder(view);
     }
 
@@ -47,6 +59,7 @@ public class Adapter_Home_Categories extends RecyclerView.Adapter<Adapter_Home_C
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
     viewHolder.product_name.setText(modellist_home.get(i).getProduct_text());
+
 
 
         // Simply load image from URL into view
@@ -89,14 +102,18 @@ public class Adapter_Home_Categories extends RecyclerView.Adapter<Adapter_Home_C
 
 
 
-
-        Glide.with(mContext).load(modellist_home.get(i).getProduct_img()).into(viewHolder.product_image);
+        Glide.with(mContext).load(modellist_home.get(i).getProduct_img()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(viewHolder.product_image);
 
         if(modellist_home.get(i).status!=2){
 
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    Bundle category = new Bundle();
+                    category.putString("category_id", modellist_home.get(i).cat_id);
+                    category.putString("category_name", modellist_home.get(i).getProduct_text());
+                    mFirebaseAnalytics.logEvent("Product", category);
 
                     FragmentTransaction fragmentTransaction;
                     fragmentTransaction = ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction().addToBackStack("home_category").replace(R.id.containerr, new Home_SubCategory());
@@ -134,12 +151,14 @@ public class Adapter_Home_Categories extends RecyclerView.Adapter<Adapter_Home_C
         TextView product_name;
         CardView cardView;
 
+
         public ViewHolder(View itemView) {
             super(itemView);
 
             product_image=itemView.findViewById(R.id.imgview);
             product_name=itemView.findViewById(R.id.txt_product_name);
             cardView=itemView.findViewById(R.id.cardview);
+
         }
     }
 }

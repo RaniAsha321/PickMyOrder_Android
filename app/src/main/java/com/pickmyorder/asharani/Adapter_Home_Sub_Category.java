@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.List;
 import io.paperdb.Paper;
 
@@ -21,6 +26,7 @@ public class Adapter_Home_Sub_Category extends RecyclerView.Adapter<Adapter_Home
 
     Context mContext;
     List<SubCategory> modellist_home;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public Adapter_Home_Sub_Category(List<SubCategory> list, Context context) {
 
@@ -32,6 +38,10 @@ public class Adapter_Home_Sub_Category extends RecyclerView.Adapter<Adapter_Home
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_layout_home_sub_category, viewGroup, false);
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
+
         return new ViewHolder(view);
     }
 
@@ -39,12 +49,18 @@ public class Adapter_Home_Sub_Category extends RecyclerView.Adapter<Adapter_Home
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
         viewHolder.product_name.setText(modellist_home.get(i).getSubCatName());
-        Glide.with(mContext).load(modellist_home.get(i).getCatImage()).into(viewHolder.product_image);
+        Glide.with(mContext).load(modellist_home.get(i).getCatImage()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(viewHolder.product_image);
 
         if(modellist_home.get(i).getStatus()!=2) {
             viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+
+                    Bundle subcategory = new Bundle();
+                    subcategory.putString("sub_category_id", modellist_home.get(i).getSubCatId());
+                    subcategory.putString("sub_category_name", modellist_home.get(i).getSubCatName());
+                    mFirebaseAnalytics.logEvent("Product", subcategory);
 
                     FragmentTransaction fragmentTransaction;
                     fragmentTransaction = ((AppCompatActivity) mContext).getSupportFragmentManager().beginTransaction().addToBackStack("l").replace(R.id.containerr, new Home_Sub_Sub_Category());

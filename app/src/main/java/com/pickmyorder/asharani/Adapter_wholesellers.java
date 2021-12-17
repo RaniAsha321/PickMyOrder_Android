@@ -27,7 +27,7 @@ public class Adapter_wholesellers extends RecyclerView.Adapter<Adapter_wholesell
     Context context;
     List<Wholselear> my_list;
     List<Wholselear> my_list_whole;
-    databaseSqlite databaseSqlite;
+    com.pickmyorder.asharani.databaseSqlite databaseSqlite;
 
 
     public Adapter_wholesellers(List<Wholselear> my_list, Context context) {
