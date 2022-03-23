@@ -31,7 +31,6 @@
 
     <LinearLayout
 
-
         android:layout_weight="6.5"
         android:gravity="center"
         android:layout_width="match_parent"

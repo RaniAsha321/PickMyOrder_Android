@@ -7,7 +7,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.pickmyorder.asharani.App_Main;
+import com.pickmyorder.asharani.app.App_Main;
 import com.pickmyorder.asharani.app.Config;
 import com.pickmyorder.asharani.util.NotificationUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;

@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Product_Detail"
+    tools:context=".Fragments.Product_Detail"
     android:orientation="vertical"
     android:weightSum="10"
     >
@@ -256,7 +256,8 @@
                                     android:paddingLeft="10dp"
                                     android:text="Product Full Name 5L  fklddlkdldmvflvflvvll"
                                     android:textColor="#333e48"
-                                    android:textSize="@dimen/_16sdp" />
+                                    android:textStyle="bold"
+                                    android:textSize="@dimen/_14sdp" />
 
                             </LinearLayout>
 

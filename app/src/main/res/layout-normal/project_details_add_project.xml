@@ -679,7 +679,7 @@
                                     android:layout_weight="0.5"
                                     android:gravity="left">
 
-                                    <com.pickmyorder.asharani.MultiSelectionSpinner
+                                    <com.pickmyorder.asharani.util.MultiSelectionSpinner
 
 
                                         android:id="@+id/mySpinner1"

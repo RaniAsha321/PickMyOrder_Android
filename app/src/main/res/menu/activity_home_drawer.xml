@@ -13,15 +13,21 @@
             android:icon="@drawable/catagories_icon72"
             android:title="@string/menu_categories" />
 
+
         <item
-            android:id="@+id/nav_van_stock"
+            android:id="@+id/nav_brands"
             android:icon="@drawable/catagories_icon72"
-            android:title="@string/menu_van_stock" />
+            android:title="@string/menu_brands" />
 
         <item
             android:id="@+id/nav_wholesellers"
             android:icon="@drawable/wholeseller72"
             android:title="@string/menu_wholeseller" />
+
+        <item
+            android:id="@+id/nav_van_stock"
+            android:icon="@drawable/catagories_icon72"
+            android:title="@string/menu_van_stock" />
 
         <item
             android:id="@+id/nav_order"
@@ -63,9 +69,6 @@
             android:title="" />
         <item
             android:id="@+id/nav_footer_2"
-            android:title="" />
-        <item
-            android:id="@+id/nav_footer_3"
             android:title="" />
 
     </group>

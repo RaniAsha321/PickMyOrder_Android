@@ -47,7 +47,7 @@
             android:resource="@color/bluetheme" />
 
         <activity
-            android:name=".Splash_Main"
+            android:name=".Activities.Splash_Main"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,42 +56,42 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Login"
+            android:name=".Activities.Login"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Payment_Stripe.AddPayment"
+            android:name=".Activities.Payment_Stripe.AddPayment"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".GetPostcode"
+            android:name=".Activities.GetPostcode"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Next_Login_Page"
+            android:name=".Activities.Next_Login_Page"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Home"
+            android:name=".Activities.Home"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Forgot_Password"
+            android:name=".Activities.Forgot_Password"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Project_details_add_project"
+            android:name=".Activities.Project_details_add_project"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Project_details_already_added"
+            android:name=".Activities.Project_details_already_added"
             android:screenOrientation="portrait" />
-        <activity android:name=".Search" />
-        <activity android:name=".Custom_Notification" />
+        <activity android:name=".Activities.Search" />
+
         <activity
-            android:name=".App_Main"
+            android:name=".app.App_Main"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Product_Zoom_Image"
+            android:name=".Activities.Product_Zoom_Image"
             android:screenOrientation="portrait"
             />
 
         <receiver
-            android:name=".DatabaseChangedReceiver"
+            android:name=".Storage.DatabaseChangedReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="com.example.scorpsoft.DATABASE_CHANGED" />

@@ -16,6 +16,7 @@
     <string name="action_settings">Settings</string>
     <string name="menu_categories">Categories</string>
     <string name="menu_van_stock">Van Stock</string>
+    <string name="menu_brands">Brands</string>
     <string name="menu_wholeseller">Wholesellers</string>
     <string name="menu_orders">Orders</string>
     <string name="menu_stock_orders">Stock Orders</string>

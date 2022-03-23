@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Home"
+    tools:context=".Activities.Home"
     android:orientation="vertical">
 
    <LinearLayout
@@ -324,6 +324,43 @@
        </LinearLayout>
 
    </LinearLayout>
+
+    <RelativeLayout
+
+        android:visibility="gone"
+        android:id="@+id/layout_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.viewpager.widget.ViewPager
+
+            android:background="@color/white"
+            android:id="@+id/viewpager_banner"
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_110sdp">
+
+        </androidx.viewpager.widget.ViewPager>
+
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+
+            android:id="@+id/banner_indicator"
+            android:layout_alignBottom="@id/viewpager_banner"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_18sdp"
+            app:dotsColor="@color/white"
+            app:dotsSize="@dimen/_7sdp"
+            app:selectedDotColor="@color/white"
+            app:dotsSpacing="@dimen/_3sdp"
+            app:dotsCornerRadius="@dimen/_5sdp"
+            app:dotsStrokeWidth="@dimen/_1sdp"
+            app:progressMode="true"
+            >
+
+        </com.tbuonomo.viewpagerdotsindicator.DotsIndicator>
+
+    </RelativeLayout>
 
     <FrameLayout
 

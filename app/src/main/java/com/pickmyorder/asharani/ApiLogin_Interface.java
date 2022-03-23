@@ -1,8 +1,52 @@
 package com.pickmyorder.asharani;
 
+import com.pickmyorder.asharani.Models.AddVanStock;
+import com.pickmyorder.asharani.Models.Approval;
+import com.pickmyorder.asharani.Models.AssignEngineer;
+import com.pickmyorder.asharani.Models.ModelAddCard;
+import com.pickmyorder.asharani.Models.ModelAddProject;
+import com.pickmyorder.asharani.Models.ModelAddedCards;
+import com.pickmyorder.asharani.Models.ModelAwaiting;
+import com.pickmyorder.asharani.Models.ModelBanner;
+import com.pickmyorder.asharani.Models.ModelBillingDetails;
+import com.pickmyorder.asharani.Models.ModelBrands;
+import com.pickmyorder.asharani.Models.ModelBuyNow;
+import com.pickmyorder.asharani.Models.ModelBuyQuote;
+import com.pickmyorder.asharani.Models.ModelCatPromo;
+import com.pickmyorder.asharani.Models.ModelCatalogues;
+import com.pickmyorder.asharani.Models.ModelChangePassword;
+import com.pickmyorder.asharani.Models.ModelCityList;
+import com.pickmyorder.asharani.Models.ModelDefaultDeliveryAddress;
+import com.pickmyorder.asharani.Models.ModelDescription;
+import com.pickmyorder.asharani.Models.ModelForgot;
+import com.pickmyorder.asharani.Models.ModelGetQuote;
+import com.pickmyorder.asharani.Models.ModelGetSections;
+import com.pickmyorder.asharani.Models.ModelLogin;
+import com.pickmyorder.asharani.Models.ModelLogout;
+import com.pickmyorder.asharani.Models.ModelMyOrder;
+import com.pickmyorder.asharani.Models.ModelOrderMenu;
+import com.pickmyorder.asharani.Models.ModelPayment;
+import com.pickmyorder.asharani.Models.ModelProductsCategory;
+import com.pickmyorder.asharani.Models.ModelProductsSubCategory;
+import com.pickmyorder.asharani.Models.ModelProductsSubSubCategory;
+import com.pickmyorder.asharani.Models.ModelProjects;
+import com.pickmyorder.asharani.Models.ModelQuote;
+import com.pickmyorder.asharani.Models.ModelRemoveCard;
+import com.pickmyorder.asharani.Models.ModelRemoveProject;
+import com.pickmyorder.asharani.Models.ModelSearching;
+import com.pickmyorder.asharani.Models.ModelShelves;
+import com.pickmyorder.asharani.Models.ModelSubSubSubCategory;
+import com.pickmyorder.asharani.Models.ModelSupplier;
+import com.pickmyorder.asharani.Models.ModelUserExist;
+import com.pickmyorder.asharani.Models.ModelVariations;
+import com.pickmyorder.asharani.Models.ModelWholesellers;
+import com.pickmyorder.asharani.Models.MoreDetails;
+import com.pickmyorder.asharani.Models.StockDetails;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
@@ -21,6 +65,10 @@ public interface ApiLogin_Interface {
     @FormUrlEncoded
     @POST("getproductcategory")
     Call<ModelProductsCategory> Products(@Field("userid") String userid, @Field("isVan") String isVan) ;
+
+    @FormUrlEncoded
+    @POST("getproductcategory")
+    Call<ModelProductsCategory> WHOLESALER_CATEGORY(@Field("Wholesalerid") String Wholesalerid, @Field("isVan") String isVan) ;
 
     @FormUrlEncoded
     @POST("getproductsubcategory")
@@ -97,14 +145,17 @@ public interface ApiLogin_Interface {
     @POST("NewSingleOrederApi")
     Call<ModelMyOrder> MY_ORDER_CALL(@Field("ref_id") String refid);
 
-
     @FormUrlEncoded
     @POST("GetProjectsApp")
     Call<ModelProjects> PROJECTS_CALL(@Field("userid") String userid);
 
-    /*@FormUrlEncoded
-    @POST("GetProjects")
-    Call<ModelProjects> PROJECTS_CALL(@Field("userid") String userid);*/
+    @FormUrlEncoded
+    @POST("SearchKey")
+    Call<ModelSearching> SEARCHING_CALL_BRAND(@Field("SearchKey") String searchkey, @Field("brandid") String brandid);
+
+    @FormUrlEncoded
+    @POST("SearchKey")
+    Call<ModelSearching> SEARCHING_CALL_WHOLESALER(@Field("SearchKey") String searchkey, @Field("Wholesalerid") String brandid);
 
     @FormUrlEncoded
     @POST("SearchKey")
@@ -119,7 +170,7 @@ public interface ApiLogin_Interface {
     Call<ModelSupplier>SUPPLIER_CALL(@Field("userid") String userid);
 
 
-    /*@FormUrlEncoded
+  /*@FormUrlEncoded
     @POST("sendprojectfromapp")
     Call<ModelAddProject> ADD_PROJECT_CALL(@Field("Project") String Project);
 */
@@ -204,5 +255,21 @@ public interface ApiLogin_Interface {
     @FormUrlEncoded
     @POST("GetSectionByShelve")
     Call<ModelGetSections> GETSHELVES(@Field("Shelveid") String Shelveid);
+
+    @FormUrlEncoded
+    @POST("CheckUserExist")
+    Call<ModelUserExist> USER_EXIST_CALL(@Field("user_id") String cart_string);
+
+    @GET("GetBrands")
+    Call<ModelBrands> BRANDS_CALL();
+
+    @FormUrlEncoded
+    @POST("GetBrandCategory")
+    Call<ModelProductsCategory> Brand_Category_Call(@Field("business_id") String business_id);
+
+    @FormUrlEncoded
+    @POST("GetAllAdvertisment")
+    Call<ModelBanner>BANNER_CALL(@Field("status") String status);
+
 
 }
